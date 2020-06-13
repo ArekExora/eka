@@ -1,0 +1,25 @@
+<eka-map
+    *ngIf="displayMap"
+    [mapInfo]="data.mapInfo"
+    [charInfo]="data.charInfo"
+    (hoverCell)="onHover($event)"
+></eka-map>
+<div>IRON IN BASE: {{ironInBase}}</div>
+<div>
+    <button (click)="moveChar('pawn1', 'down')">MOVE DOWN</button>
+    <button (click)="moveChar('pawn1', 'up')">MOVE UP</button>
+    <button (click)="moveChar('pawn1', 'right')">MOVE RIGHT</button>
+    <button (click)="moveChar('pawn1', 'left')">MOVE LEFT</button>
+</div>
+<div>
+    <button (click)="mineChar('pawn1', 'down')">MINE DOWN</button>
+    <button (click)="mineChar('pawn1', 'up')">MINE UP</button>
+    <button (click)="mineChar('pawn1', 'right')">MINE RIGHT</button>
+    <button (click)="mineChar('pawn1', 'left')">MINE LEFT</button>
+</div>
+<div>
+    <button (click)="dropChar('pawn1', 'down')">DROP DOWN</button>
+    <button (click)="dropChar('pawn1', 'up')">DROP UP</button>
+    <button (click)="dropChar('pawn1', 'right')">DROP RIGHT</button>
+    <button (click)="dropChar('pawn1', 'left')">DROP LEFT</button>
+</div>

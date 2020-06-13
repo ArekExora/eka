@@ -1,0 +1,13 @@
+﻿<div class="holder col-md-6 offset-md-3 mt-5">
+    <div class="card">
+        <h4 class="card-header">{{ heading }}</h4>
+        <div class="card-body">
+            <eka-form [model]="data" [loading]="loading" [errors]="errors" (submitted)="onSubmit($event)">
+                <div class="sub-text" [ngSwitch]="action">
+                    <span *ngSwitchCase="'login'">New around here?<a routerLink="../register" class="btn btn-link">Register</a></span>
+                    <span *ngSwitchCase="'register'">Already have an account?<a routerLink="../login" class="btn btn-link">Log in</a></span>
+                </div>
+            </eka-form>
+        </div>
+    </div>
+</div>

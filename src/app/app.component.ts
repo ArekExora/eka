@@ -1,10 +1,15 @@
 import { Component } from '@angular/core';
 
+
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  // tslint:disable-next-line: component-selector
+  selector: 'app',
+  template: `
+      <div>
+          <eka-navbar></eka-navbar>
+          <eka-alert></eka-alert>
+          <router-outlet></router-outlet>
+      </div>
+  `
 })
-export class AppComponent {
-  title = 'Eka';
-}
+export class AppComponent {}

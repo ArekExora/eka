@@ -1,0 +1,18 @@
+﻿<mat-form-field [formGroup]="form" *ngIf="model">
+    <mat-label>{{ model.label }}</mat-label>
+    <input matInput [type]="inputType" [formControlName]="model.selector" />
+    <button type="button" tabindex="-1" mat-button *ngIf="value"
+        matSuffix mat-icon-button aria-label="Clear"
+        (click)="resetValue()"
+    >
+        <mat-icon>close</mat-icon>
+    </button>
+    <button type="button" tabindex="-1" mat-button *ngIf="model.type === 'password'"
+        matSuffix mat-icon-button aria-label="Clear"
+        (mousedown)="showPassword()"
+        (mouseup)="hidePassword()"
+    >
+        <mat-icon>{{ inputType === 'password' ? 'visibility_off' : 'visibility' }}</mat-icon>
+    </button>
+    <mat-error *ngFor="let error of errors">{{ error }}</mat-error>
+</mat-form-field>

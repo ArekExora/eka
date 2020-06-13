@@ -1,0 +1,15 @@
+﻿<form [formGroup]="data.form" (ngSubmit)="onSubmit()">
+    <eka-input *ngFor="let field of data.fields" [form]="data.form" [model]="field"></eka-input>
+    <div class="form-group">
+        <div class="buttons">
+            <button type="submit" [disabled]="disabled" class="btn btn-primary">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                {{data.primaryText}}
+            </button>
+            <button type="button" *ngIf="data.secondaryText" class="btn btn-secondary">
+                {{data.secondaryText}}
+            </button>
+        </div>
+        <ng-content></ng-content>
+    </div>
+</form>
