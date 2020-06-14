@@ -1,8 +1,8 @@
 import { HttpCodes, User } from '@server/_models';
 import * as bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
-import { forkJoin, from, Observable, of } from 'rxjs';
-import { flatMap, map } from 'rxjs/operators';
+import { forkJoin, from, Observable, of, throwError } from 'rxjs';
+import { catchError, flatMap, map } from 'rxjs/operators';
 import { v4 as uuidV4 } from 'uuid';
 import { UsersPersistenceService } from './users-persistence.service';
 
@@ -22,7 +22,6 @@ export class UsersController {
 
         this.persistenceService = new UsersPersistenceService();
         this.login = this.login.bind(this);
-        this.logout = this.logout.bind(this);
         this.register = this.register.bind(this);
 
         // MOCK DATA TO EASE TESTING.
@@ -42,7 +41,7 @@ export class UsersController {
         return from(bcrypt.compare(receivedPassword, user.password)).pipe(
             map(matches => {
                 if (!matches) {
-                    throw HttpCodes.Bad_Request;
+                    throw HttpCodes.WrongPassword;
                 }
                 return user;
             })
@@ -51,6 +50,7 @@ export class UsersController {
 
     private verifyAndAssignToken({ username, password }): Observable<User> {
         return this.persistenceService.getByUsername(username).pipe(
+            catchError(() => throwError(HttpCodes.WrongPassword)),
             flatMap(user => this.checkPassword(user, password)),
             flatMap(user => this.persistenceService.updateUser({ ...user, token: this.generateToken() }))
         );
@@ -114,13 +114,6 @@ export class UsersController {
     login({ body }: Request, response: Response): void {
         this.verifyAndAssignToken(body).subscribe(
             user => response.status(HttpCodes.OK).send(this.deleteSensibleFields(user)),
-            code => response.status(code).send(),
-        );
-    }
-
-    logout({ body }: Request, response: Response): void {
-        this.persistenceService.updateUser({ id: body.id, token: ''}).subscribe(
-            () => response.status(HttpCodes.OK).send(),
             code => response.status(code).send(),
         );
     }

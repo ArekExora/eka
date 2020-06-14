@@ -2,10 +2,16 @@
     <div class="card">
         <h4 class="card-header">{{ heading }}</h4>
         <div class="card-body">
-            <eka-form [model]="data" [loading]="loading" [errors]="errors" (submitted)="onSubmit($event)">
+            <eka-form [model]="formData" [loading]="loading" [errors]="errors" (submitted)="onSubmit($event)">
                 <div class="sub-text" [ngSwitch]="action">
-                    <span *ngSwitchCase="'login'">New around here?<a routerLink="../register" class="btn btn-link">Register</a></span>
-                    <span *ngSwitchCase="'register'">Already have an account?<a routerLink="../login" class="btn btn-link">Log in</a></span>
+                    <div *ngSwitchCase="'login'">
+                        New around here?
+                        <a routerLink="../register" queryParamsHandling="preserve" class="btn btn-link">Register</a>
+                    </div>
+                    <div *ngSwitchCase="'register'">
+                        Already have an account?
+                        <a routerLink="../login" queryParamsHandling="preserve" class="btn btn-link">Log in</a>
+                    </div>
                 </div>
             </eka-form>
         </div>

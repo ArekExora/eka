@@ -4,13 +4,11 @@ import { NgModule } from '@angular/core';
 import { EkaFormsModule } from '@app/forms';
 import { AccountRoutingModule } from './account-routing.module';
 import { LoginComponent } from './login.component';
-import { RegisterComponent } from './register.component';
 
 
 @NgModule({
     declarations: [
         LoginComponent,
-        RegisterComponent,
     ],
     providers: [
         LoggedinGuard

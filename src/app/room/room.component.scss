@@ -1,1 +1,24 @@
-﻿
+﻿:host {
+    display: block;
+    height: calc(100% - 52px);
+}
+
+.holder {
+    // background-color: blue;
+    height: 100%;
+}
+
+.room-list {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+    height: calc(100% - 50px);
+}
+
+.row.upper {
+    height: 75%;
+}
+
+.row.lower {
+    height: 25%;
+}

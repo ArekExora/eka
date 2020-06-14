@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { LoginComponent } from './login.component';
-import { RegisterComponent } from './register.component';
 
 const routes: Routes = [
     {
@@ -12,11 +11,13 @@ const routes: Routes = [
         children: [
             {
                  path: 'login',
+                 data: { action: 'login' },
                  component: LoginComponent
             },
             {
                  path: 'register',
-                 component: RegisterComponent
+                 data: { action: 'register' },
+                 component: LoginComponent
             }
         ]
     }

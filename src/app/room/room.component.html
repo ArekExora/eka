@@ -1,3 +1,18 @@
-﻿<div class="holder">
-    ROOM COMPONENT
+﻿<div class="holder container-xl">
+    <div class="row upper">
+        <div class="main-view col-md-9">
+            <h3 class="title">ROOM LIST</h3>
+            <div class="room-list">
+                <div class="room-data" *ngFor="let room of roomList">{{room}}</div>
+            </div>
+        </div>
+        <div class="side-view col-md-3">
+            <h2 class="title">ROOM INFO</h2>
+        </div>
+    </div>
+    <div class="row lower">
+        <div class="main-view col">
+            <h3 class="title">GENERAL INFO</h3>
+        </div>
+    </div>
 </div>

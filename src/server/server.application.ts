@@ -1,8 +1,8 @@
-import * as express from 'express';
-import { existsSync } from 'fs';
-import { join } from 'path';
-import { routes as usersRoutes } from './users';
 import { environment } from '@environments/environment';
+import * as express from 'express';
+import { join } from 'path';
+import { routes as roomsRoutes } from './rooms';
+import { routes as usersRoutes } from './users';
 
 
 // The Express app is exported so that it can be used by serverless Functions.
@@ -17,6 +17,7 @@ export function app() {
 
     // Map api routes.
     server.use('/api/users', usersRoutes);
+    server.use('/api/rooms', roomsRoutes);
     server.use('/api/**', (req, res) => {
       res.status(404).send('data requests are not yet supported');
     });
