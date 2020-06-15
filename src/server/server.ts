@@ -2,7 +2,7 @@ import { environment } from '@environments/environment';
 import { SocketController } from './socket/socket.controller';
 
 import { app } from './server.application';
-import * as socket_io from 'socket.io';
+import * as io from 'socket.io';
 import * as http from 'http';
 
 function run() {
@@ -10,9 +10,8 @@ function run() {
 
   // Start up the Node server
   const server = http.createServer(app());
-  const io = socket_io(server, { serveClient: false });
-  const socketController = new SocketController();
-  io.on('connection', socketController.onConnection);
+  // tslint:disable-next-line: no-unused-expression
+  new SocketController(io(server, { serveClient: false }));
 
   server.listen(port, () => {
     console.log(`Node Express server listening on http://localhost:${port}`);

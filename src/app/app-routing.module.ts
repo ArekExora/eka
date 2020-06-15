@@ -9,7 +9,7 @@ const accountModule = () => import('./account').then(x => x.AccountModule);
 const roomModule = () => import('./room').then(x => x.RoomModule);
 
 const routes: Routes = [
-  { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: '',           component: HomeComponent,     canActivate: [AuthGuard] },
   { path: 'rooms',      loadChildren: roomModule,     canActivate: [AuthGuard] },
   { path: 'account',    loadChildren: accountModule },
 

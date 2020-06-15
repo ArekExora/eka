@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from
 import { UserService } from '@app/_services';
 
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class LoggedinGuard implements CanActivate {
     constructor(
         private router: Router,

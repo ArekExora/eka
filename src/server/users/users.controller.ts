@@ -4,23 +4,21 @@ import { Request, Response } from 'express';
 import { forkJoin, from, Observable, of, throwError } from 'rxjs';
 import { catchError, flatMap, map } from 'rxjs/operators';
 import { v4 as uuidV4 } from 'uuid';
+import { SingletonService } from '../_services';
 import { UsersPersistenceService } from './users-persistence.service';
 
-let instance: UsersController;
-
 export class UsersController {
-    private persistenceService: UsersPersistenceService;
+    private connectedUsers: User[] = []; // TODO: Hacer algo con esto
 
-    constructor() {
-        // Kind of singleton implementation.
+    constructor(
+        private persistenceService = new UsersPersistenceService()
+    ) {
+        const instance = SingletonService.get(this);
         if (instance) {
             return instance;
-        } else {
-            instance = this;
         }
         console.log('*** Initializing UsersController');
 
-        this.persistenceService = new UsersPersistenceService();
         this.login = this.login.bind(this);
         this.register = this.register.bind(this);
 
@@ -126,8 +124,8 @@ export class UsersController {
         );
     }
 
-    register(request: Request, response: Response): void {
-        this.registerUser(request.body).subscribe(
+    register({ body }: Request, response: Response): void {
+        this.registerUser(body).subscribe(
             user => response.status(HttpCodes.Created).send(this.deleteSensibleFields(user)),
             ({ code, fields }) => response.status(code).send(fields),
         );

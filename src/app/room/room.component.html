@@ -1,13 +1,22 @@
 ﻿<div class="holder container-xl">
     <div class="row upper">
         <div class="main-view col-md-9">
-            <h3 class="title">ROOM LIST</h3>
+            <h3 class="title">ROOM LIST {{connectedUsers}} connected users</h3>
             <div class="room-list">
-                <div class="room-data" *ngFor="let room of roomList">{{room}}</div>
+                <div class="room-data" *ngFor="let room of roomList" (click)="selectRoom(room)">{{room.id}}, {{room.game}}</div>
             </div>
         </div>
         <div class="side-view col-md-3">
             <h2 class="title">ROOM INFO</h2>
+            <div *ngIf="selectedRoom">
+                <div> Name: {{selectedRoom.id}}</div>
+                <div> Game: {{selectedRoom.game}}</div>
+                <div> Has password: {{!!selectedRoom.password}}</div>
+                <div> Public: {{!selectedRoom.isPrivate}}</div>
+                <div> Users: {{selectedRoom.connectedUsers}}</div>
+                <button (click)="joinRoom(selectedRoom)">Join</button>
+                <button (click)="leaveRoom(selectedRoom)">Leave</button>
+            </div>
         </div>
     </div>
     <div class="row lower">
