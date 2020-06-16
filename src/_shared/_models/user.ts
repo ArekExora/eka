@@ -1,7 +1,11 @@
 ﻿export class User {
     id: string;
     username: string;
-    password: string;
     email: string;
-    token: string;
+    password?: string;
+    token?: string;
+
+    static requiredFieldsOnly({ id, username, email }: User): User {
+        return { id, username, email };
+    }
 }

@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpCodes } from '@app/_models';
+import { ErrorCodes, HttpCodes } from '@app/_models';
 import { AlertService, UserService } from '@app/_services';
 
 
@@ -65,11 +65,17 @@ export class LoginComponent implements OnInit {
         return true;
     }
 
+    private handleCustomErrors({ code, fields }) {
+        switch (code) {
+            case ErrorCodes.Wrong_Password: this.alertService.error('Username or password not correct.', { autoClose: true }); break;
+            case ErrorCodes.Invalid_Field: this.errors = fields.split(',').map(field => ({ field, type: 'pattern' })); break;
+            case ErrorCodes.Duplicated: this.errors = fields.split(',').map(field => ({ field, type: 'duplicated' })); break;
+        }
+    }
+
     private handleError(error) {
         switch (error.status) {
-            case HttpCodes.Conflict: this.errors = error.error.split(',').map(field => ({ field, type: 'duplicated' })); break;
-            case HttpCodes.Bad_Request: this.errors = error.error.split(',').map(field => ({ field, type: 'pattern' })); break;
-            case HttpCodes.WrongPassword: this.alertService.error('Username or password not correct.', { autoClose: true }); break;
+            case HttpCodes.Bad_Request: this.handleCustomErrors(error.error); break;
             case HttpCodes.Not_Found: this.alertService.error('Service temporarily unavailable.', { autoClose: true }); break;
             case HttpCodes.Internal_Error: this.alertService.error('Unexpected error, please try again.', { autoClose: true }); break;
             default: this.alertService.error(error.message || error, { autoClose: true });

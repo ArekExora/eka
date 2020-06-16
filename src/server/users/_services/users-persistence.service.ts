@@ -1,7 +1,7 @@
 import { HttpCodes, User } from '@server/_models';
 import { Observable, of, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { SingletonService } from '../_services';
+import { SingletonService } from '../../_services';
 
 export class UsersPersistenceService {
     private userListMock: User[] = [];
