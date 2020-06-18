@@ -29,6 +29,8 @@ export class UserService {
     ) {
         this.userSubject = new BehaviorSubject<User>(null);
         this.user$ = this.userSubject.asObservable();
+
+        socketService.onDisconnection(() => this.logout());
     }
 
     retrieveStoredUser(): User {

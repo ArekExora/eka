@@ -63,20 +63,22 @@ export class RoomsController {
 
     joinRoom(user: User, roomName: string): number {
         const room = this.roomList.find(r => r.id === roomName);
-        if (!room) {
+        if (!room || user.room || room.connectedUsers.includes(user)) {
             return -1;
         }
 
+        user.room = roomName;
         room.connectedUsers.push(user);
         return room.connectedUsers.length;
     }
 
     leaveRoom(user: User, roomName: string): number {
         const room = this.roomList.find(r => r.id === roomName);
-        if (!room) {
+        if (!room || !user.room || !room.connectedUsers.includes(user)) {
             return -1;
         }
 
+        user.room = '';
         room.connectedUsers = room.connectedUsers.filter(u => u.id !== user.id);
         return room.connectedUsers.length;
     }

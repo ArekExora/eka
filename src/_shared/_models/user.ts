@@ -8,6 +8,7 @@ export class User {
     password?: string;
     token?: string;
     socket?: Socket;
+    room?: string;
 
     static requiredFieldsOnly({ id, username, email }: User): User {
         return { id, username, email };
