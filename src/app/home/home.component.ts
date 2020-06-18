@@ -8,6 +8,6 @@ export class HomeComponent {
     user: User;
 
     constructor(userService: UserService) {
-        this.user = userService.userValue;
+        userService.user$.subscribe(user => this.user = user);
     }
 }

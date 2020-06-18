@@ -7,6 +7,7 @@ export class UsersPersistenceService {
     private userListMock: User[] = [];
 
     constructor(){
+        // Singleton not required! (When DB is working)
         const instance = SingletonService.get(this);
         if (instance) {
             return instance;

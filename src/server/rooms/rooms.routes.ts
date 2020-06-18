@@ -1,10 +1,10 @@
 import * as express from 'express';
 import { RoomsController } from './rooms.controller';
 
-export const routes = express.Router();
 
 const controller = new RoomsController();
 
-routes.post('/create',      controller.create);
-routes.get('/list',         controller.getRoomList);
-routes.get('/details/:id',  controller.getRoom);
+export const roomsRoutes = express.Router();
+roomsRoutes.post('/create',      controller.create);
+roomsRoutes.get('/list',         controller.getRoomList);
+roomsRoutes.get('/details/:id',  controller.getRoom);

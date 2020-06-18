@@ -1,5 +1,6 @@
+import { ErrorCodes, User } from '@server/_models';
 import { SingletonService } from '@server/_services';
-import { User } from '@server/_models';
+import { Observable, of, throwError } from 'rxjs';
 
 export class SessionService {
 
@@ -14,8 +15,16 @@ export class SessionService {
         console.log('*** Initializing SessionService');
     }
 
-    generateToken(user: User) {
-        return 'TOKEN';
+    checkSession(user: User): Observable<User> {
+        if (user.token === `TOKEN:${user.username}`) {
+            return of(user);
+        }
+
+        return throwError({ code: ErrorCodes.Session_Expired });
+    }
+
+    generateToken(user: User): Observable<string> {
+        return of(`TOKEN:${user.username}`);
     }
 
 }

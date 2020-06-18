@@ -1,15 +1,14 @@
 import { environment } from '@environments/environment';
 import * as express from 'express';
 import { join } from 'path';
-import { routes as roomsRoutes } from './rooms';
-import { routes as usersRoutes } from './users';
+import { roomsRoutes } from './rooms';
+import { usersRoutes } from './users';
 
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app() {
     const server = express();
     const distFolder = join(process.cwd(), 'dist/Eka/browser');
-    // const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
 
     server.set('view engine', 'html');
     server.set('views', distFolder);
@@ -28,7 +27,6 @@ export function app() {
     }));
 
     server.get('*', (req, res) => {
-      // res.render(indexHtml);
       res.status(200).sendFile(join(distFolder, 'index.html'));
     });
 

@@ -13,7 +13,7 @@ export class NavbarComponent {
   constructor(
     private userService: UserService
   ) {
-    this.userService.user.subscribe(user => this.user = user);
+    this.userService.user$.subscribe(user => this.user = user);
   }
 
   logout() {

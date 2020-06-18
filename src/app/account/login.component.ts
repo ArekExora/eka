@@ -46,7 +46,6 @@ export class LoginComponent implements OnInit {
         this.userService[this.action](data)
             .subscribe(
                 user => {
-                    this.alertService.success(`Welcome ${user.username}`, { autoClose: true, keepAfterRouteChange: true });
                     this.router.navigate([this.returnUrl]);
                 },
                 error => {

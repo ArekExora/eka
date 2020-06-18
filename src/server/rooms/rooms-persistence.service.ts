@@ -10,6 +10,7 @@ export class RoomsPersistenceService {
     ];
 
     constructor(){
+        // Singleton not required! (When DB is working)
         const instance = SingletonService.get(this);
         if (instance) {
             return instance;

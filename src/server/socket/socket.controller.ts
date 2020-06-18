@@ -1,12 +1,14 @@
-import { Server, Socket } from 'socket.io';
+import { User } from '@server/_models';
+import { Server } from 'socket.io';
 import { RoomsController } from '../rooms';
 import { UsersController } from '../users';
 import { SingletonService } from '../_services';
 
+interface Socket extends SocketIO.Socket {
+    user?: User;
+}
 
 export class SocketController {
-    private socketByUser: { [userId: string]: Socket } = {};
-    private userBySocket: { [socketId: string]: string } = {};
     private connectedUsers = 0;
 
     constructor(
@@ -20,47 +22,49 @@ export class SocketController {
         }
         console.log('*** Initializing SocketController');
 
-        io.on('connection', this.onConnection.bind(this));
+        io.on('connection', socket => this.onConnection(socket));
     }
 
-    private onConnection(socket: Socket) {
-        console.log('a user connected ' + socket.id);
-        socket.on('login', data => this.onLogin(data, socket));
+    private onConnection(socket: Socket): void {
+        console.log(`Socket connected '${socket.id}'`);
+
+        socket.on('login', data => this.onLogin(socket, data));
         socket.on('disconnect', () => this.onDisconnent(socket));
-        socket.on('join_room', room => this.handleRoom(this.userBySocket[socket.id], room, 'join'));
-        socket.on('leave_room', room => this.handleRoom(this.userBySocket[socket.id], room, 'leave'));
+        socket.on('join_room', room => this.handleRoom(socket, room, 'join'));
+        socket.on('leave_room', room => this.handleRoom(socket, room, 'leave'));
+
         this.io.sockets.emit('user_count', ++this.connectedUsers);
     }
 
-    private onLogin(userId: string, socket: Socket) {
-        this.socketByUser[userId] = socket;
-        this.userBySocket[socket.id] = userId;
-        console.log('logged in', userId);
+    private onLogin(socket: Socket, userId: string): void {
+        const user = this.usersController.getUser(userId);
+        if (!user) {
+            console.error(`Received socket login event from unconnected user '${userId}'`);
+            return;
+        }
+        user.socket = socket;
+        socket.user = user;
+        console.log(`Socket login '${userId}'`);
     }
 
-    private onDisconnent(socket: Socket) {
-        console.log('a user disconnected ' + socket.id);
-        const userId = this.userBySocket[socket.id];
-        delete this.socketByUser[userId];
-        delete this.userBySocket[socket.id];
-        this.usersController.logoutById(userId);
+    private onDisconnent(socket: Socket): void {
+        console.log(`Socket disconnected '${socket.id}'`);
+        this.usersController.logoutById(socket.user.id);
         this.io.sockets.emit('user_count', --this.connectedUsers);
     }
 
-    private handleRoom(userId: string, roomName: string, action: 'join' | 'leave') {
-        const socket = this.socketByUser[userId];
-        if (!socket) {
-            return console.error(`No socket found for user ${userId}`);
-        } else if (!roomName) {
+    private handleRoom(socket: Socket, roomName: string, action: 'join' | 'leave') {
+        if (!roomName) {
             return console.error('No room name provided!');
         } else if (!['join', 'leave'].includes(action)) {
             return console.error(`Invalid action sent: '${action}'`);
         }
 
-        if (this.roomsController[`${action}Room`](userId, roomName)) {
+        const userCount = this.roomsController[`${action}Room`](socket.user, roomName);
+        if (userCount >= 0) {
             socket[action](roomName, () => {
                 socket.emit(`${action}_room`, roomName);
-                this.io.to(roomName).emit('room_change', `A user ${action} the room`);
+                this.io.to(roomName).emit('room_change', { message: `User ${socket.user.username} ${action} the room`, userCount });
             });
         } else {
             socket.emit('error', `Unable to ${action} the room ${roomName}`);

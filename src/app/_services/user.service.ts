@@ -1,65 +1,79 @@
 ﻿import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from '@app/_models';
+import { ErrorCodes, User } from '@app/_models';
+import { AlertService } from '@app/_services';
 import { environment } from '@environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 import { SocketService } from './socket.service';
 import { LocalStorageService } from './storage';
 
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-    private userSubject: BehaviorSubject<User>;
-    public user: Observable<User>;
+    user$: Observable<User>;
+    get userValue(): User {
+        return this.userSubject.value;
+    }
 
+    private userSubject: BehaviorSubject<User>;
     private url = `${environment.apiUrl}/users`;
 
     constructor(
         private http: HttpClient,
         private router: Router,
         private storageService: LocalStorageService,
-        private socketService: SocketService
+        private socketService: SocketService,
+        private alertService: AlertService
     ) {
-        const savedUser = JSON.parse(this.storageService.getItem('user'));
-        this.userSubject = new BehaviorSubject<User>(savedUser);
-        this.user = this.userSubject.asObservable();
-        if (savedUser) {
-            this.socketService.connect(savedUser.id);
-        }
+        this.userSubject = new BehaviorSubject<User>(null);
+        this.user$ = this.userSubject.asObservable();
     }
 
-    public get userValue(): User {
-        return this.userSubject.value;
+    retrieveStoredUser(): User {
+        return JSON.parse(this.storageService.getItem('user'));
     }
 
-    private updateUser(user: User) {
-        console.log('user', user);
-        this.storageService.setItem('user', JSON.stringify(user));
-        this.userSubject.next(user);
-    }
-
-    login({ username, password }) {
-        return this.http.post(`${this.url}/login`, { username, password })
-            .pipe(
-                tap(this.updateUser.bind(this)),
-                tap(({ id }: User) => this.socketService.connect(id))
-            );
+    clearStoredUser(): void {
+        this.storageService.removeItem('user');
     }
 
     logout() {
         this.socketService.disconnect();
-        this.storageService.removeItem('user');
+        this.clearStoredUser();
         this.userSubject.next(null);
         this.router.navigate(['/account/login']);
     }
 
-    register({ username, email, password }) {
-        return this.http.post(`${this.url}/register`, { username, email, password })
-            .pipe(
-                tap(this.updateUser.bind(this)),
-                tap(({ id }: User) => this.socketService.connect(id))
-            );
+    reconnect(user: User): Observable<User> {
+        return this.http.post<User>(`${this.url}/reconnect`, user).pipe(
+            map(this.onLogin.bind(this))
+        );
+    }
+
+    login({ username, password }): Observable<User> {
+        return this.http.post<User>(`${this.url}/login`, { username, password }).pipe(
+            map(this.onLogin.bind(this))
+        );
+    }
+
+    register({ username, email, password }): Observable<User> {
+        return this.http.post<User>(`${this.url}/register`, { username, email, password }).pipe(
+            map(this.onLogin.bind(this))
+        );
+    }
+
+    private onLogin(user: User): User {
+        console.log('Logged in: ', user);
+        this.updateUser(user);
+        this.socketService.connect(user.id);
+        this.alertService.success(`Welcome ${user.username}`, { autoClose: true, keepAfterRouteChange: true });
+        return user;
+    }
+
+    private updateUser(user: User) {
+        this.storageService.setItem('user', JSON.stringify(user));
+        this.userSubject.next(user);
     }
 }

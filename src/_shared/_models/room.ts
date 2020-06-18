@@ -1,3 +1,5 @@
+import { User } from './user';
+
 export class StoredRoom {
     id: string;
     password: string;
@@ -8,5 +10,5 @@ export class StoredRoom {
 
 export class Room extends StoredRoom {
     persistent: boolean;
-    connectedUsers: number;
+    connectedUsers: User[];
 }

@@ -13,12 +13,12 @@ export class SocketService {
             throw new Error('User already connected to a socket.');
         }
         this._socket = io();
-        this.socket.emit('login', userId);
-        this.socket.on('user_count', count => this.userCount$.next(count));
-        this.socket.on('join_room', roomName => console.log(`Joined room ${roomName}`));
-        this.socket.on('leave_room', roomName => console.log(`Left room ${roomName}`));
-        this.socket.on('room_change', msg => console.log(msg));
-        this.socket.on('error', error => console.error(error));
+        this._socket.emit('login', userId);
+        this._socket.on('user_count', count => this.userCount$.next(count));
+        this._socket.on('join_room', msg => console.log('join_room', msg));
+        this._socket.on('leave_room', msg => console.log('leave_room', msg));
+        this._socket.on('room_change', ({ message, userCount }) => console.log(message, userCount));
+        this._socket.on('error', error => console.error(error));
     }
 
     joinRoom(roomName: string) {
