@@ -1,18 +1,11 @@
-﻿<mat-form-field [formGroup]="form" *ngIf="model">
-    <mat-label>{{ model.label }}</mat-label>
-    <input matInput [type]="inputType" [formControlName]="model.selector" />
-    <button type="button" tabindex="-1" mat-button *ngIf="value"
-        matSuffix mat-icon-button aria-label="Clear"
-        (click)="resetValue()"
+﻿<mat-form-field [formGroup]="form" *ngIf="selector" appearance="outline">
+    <mat-label *ngIf="data.label">{{ data.label }}</mat-label>
+    <input matInput [type]="show ? 'text' : data.type" [required]="required" [formControlName]="data.selector" />
+    <button type="button" tabindex="-1" *ngIf="data.type === 'password'" mat-icon-button matSuffix (click)="show = !show"
+        [attr.aria-label]="'Show password'" [attr.aria-pressed]="show"
     >
-        <mat-icon>close</mat-icon>
+        <mat-icon>{{ show ? 'visibility' : 'visibility_off' }}</mat-icon>
     </button>
-    <button type="button" tabindex="-1" mat-button *ngIf="model.type === 'password'"
-        matSuffix mat-icon-button aria-label="Clear"
-        (mousedown)="showPassword()"
-        (mouseup)="hidePassword()"
-    >
-        <mat-icon>{{ inputType === 'password' ? 'visibility_off' : 'visibility' }}</mat-icon>
-    </button>
-    <mat-error *ngFor="let error of errors">{{ error }}</mat-error>
+    <mat-hint align="start" *ngIf="data.hint">{{ data.hint }}</mat-hint>
+    <mat-error *ngFor="let error of errors">{{ error }}</mat-error>    
 </mat-form-field>

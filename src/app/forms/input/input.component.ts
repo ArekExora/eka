@@ -1,5 +1,7 @@
 ﻿import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
+import { FieldInterface } from '../field.interface';
+import { EkaFormField } from '../_services';
 
 
 @Component({
@@ -7,42 +9,29 @@ import { AbstractControl, FormGroup } from '@angular/forms';
     templateUrl: 'input.component.html',
     styleUrls: ['input.component.scss']
 })
-export class InputComponent implements OnInit {
+export class InputComponent implements FieldInterface, OnInit {
     @Input() form: FormGroup;
-    @Input() model: any;
-    inputType: string;
+    @Input() selector: string;
+    required = false;
+    show = false;
 
-    constructor() { }
+    public get data(): EkaFormField {
+        return (this.control as any).data;
+    }
 
     ngOnInit() {
-        this.inputType = this.model.type;
-    }
-
-    showPassword() {
-        this.inputType = 'text';
-    }
-
-    hidePassword() {
-        this.inputType = this.model.type;
-    }
-
-    resetValue() {
-        this.control.setValue('');
-    }
-
-    get value(): string {
-        return this.control.value;
+        this.required =  !!(this.data.validators || []).find(fn => fn.name === 'required');
     }
 
     get errors(): string[] {
         const errors = this.control.errors;
         return Object.keys(errors || {})
-            .map(key => this.model.errorMessages[key])
+            .map(key => this.data.errorMessages[key])
             .filter(msg => !!msg);
     }
 
     private get control(): AbstractControl {
-        return this.form.get(this.model.selector);
+        return this.form.get(this.selector);
     }
 
 }

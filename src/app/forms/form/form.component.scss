@@ -1,9 +1,18 @@
-﻿.buttons {
+﻿mat-card {
+    padding: 2rem 4rem;
+}
+
+mat-card-title {
+    margin-bottom: 1em;
+}
+
+mat-card-actions {
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-between;
     
     button {
+        outline: none;
         width: 45%;
     }
 }

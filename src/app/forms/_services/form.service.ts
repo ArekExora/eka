@@ -1,28 +1,38 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl, ValidatorFn } from '@angular/forms';
+
+export enum InputTypes {
+    text = 'text',
+    email = 'email',
+    password = 'password'
+}
 
 export class EkaFormField {
     selector: string;
     label: string;
-    type?: string;
+    type?: InputTypes;
     value?: string;
-    validators?: Validators[];
+    validators?: ValidatorFn[];
     errorMessages?: { [key: string]: string };
+    hint?: string;
 }
 
 export class EkaFormModel {
+    heading?: string;
     primaryText: string;
     secondaryText?: string;
     fields: string[];
 }
 
 export class EkaFormData {
+    heading?: string;
     form: FormGroup;
     primaryText: string;
     secondaryText?: string;
-    fields: EkaFormField[];
 }
 
+const nameRegex = /^t.*/;
+const passwordRegex = /^a.*/;
 const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
 
 @Injectable()
@@ -33,55 +43,106 @@ export class FormService {
     ) { }
 
     parseData(data: EkaFormModel): EkaFormData {
-        const { primaryText, secondaryText, fields: fieldsData } = data;
-        const fields = fieldsData.map(f => this.generateField(f));
-        const formData = fields
-            .reduce((fData, f) => { fData[f.selector] = [f.value || '', f.validators]; return fData; }, {});
+        const { heading, primaryText, secondaryText, fields } = data;
+        const formData = fields.reduce((fData, f) => {
+            const d = this.getDataForField(f);
+            fData[d.selector] = this.createCustomControl(d);
+            return fData;
+        }, {});
 
         return {
+            heading,
             primaryText,
             secondaryText,
-            form: this.formBuilder.group(formData),
-            fields
+            form: this.formBuilder.group(formData)
         };
     }
 
-    private generateField(name: string): EkaFormField {
-        switch (name) {
-            case 'username': return this.generateTextField(name, 'Username', true);
-            case 'email': return this.generateEmailField(name, 'Email', true);
-            // case 'email2': return this.generateEmailField(name, 'Email confirmation', true);
-            case 'password': return this.generatePasswordField(name, 'Password', true);
-            case 'password2': return this.generatePasswordField(name, 'Password confirmation', true);
-        }
-        return null;
+    private createCustomControl(data: EkaFormField): FormControl {
+        const control: FormControl = this.formBuilder.control(data.value, data.validators);
+        (control as any).data = data;
+        return control;
     }
 
-    private generateTextField(selector: string, label: string, required: boolean) {
-        return this.generateGenericField(selector, label, required, 'text');
-    }
-
-    private generateEmailField(selector: string, label: string, required: boolean) {
-        const fieldData = this.generateGenericField(selector, label, required, 'email');
-        fieldData.validators.push(Validators.pattern(emailRegex));
-        return fieldData;
-    }
-
-    private generatePasswordField(selector: string, label: string, required: boolean) {
-        return this.generateGenericField(selector, label, required, 'password');
-    }
-
-    private generateGenericField(selector: string, label: string, required: boolean, type: string) {
-        return {
-            selector,
-            label: required ? `${label} *` : label,
-            type,
-            validators: required ?  [Validators.required] : [],
-            errorMessages: {
-                required: `${label} is required`,
-                pattern: 'Please introduce a valid value',
-                duplicated: `${label} already taken`
+    private getDataForField(fieldCode: string): EkaFormField {
+        const dataMap = {
+            username: {
+                selector: 'username',
+                label: 'Username',
+                type: InputTypes.text,
+                value: '',
+                validators: [Validators.required],
+                errorMessages: {
+                    required: 'Username is required'
+                }
+            },
+            reg_username: {
+                selector: 'username',
+                label: 'Username',
+                type: InputTypes.text,
+                value: '',
+                validators: [Validators.required, Validators.pattern(nameRegex)],
+                errorMessages: {
+                    required: 'Username is required',
+                    pattern: 'Please introduce a valid name',
+                    duplicated: 'Username already taken'
+                },
+                hint: 'Must begin with "t".'
+            },
+            reg_email: {
+                selector: 'email',
+                label: 'Email',
+                type: InputTypes.email,
+                value: '',
+                validators: [Validators.required, Validators.pattern(emailRegex)],
+                errorMessages: {
+                    required: 'Email is required',
+                    pattern: 'Please introduce a valid email',
+                    duplicated: 'Email already taken'
+                }
+            },
+            password: {
+                selector: 'password',
+                label: 'Password',
+                type: InputTypes.password,
+                value: '',
+                validators: [Validators.required],
+                errorMessages: {
+                    required: 'Password is required'
+                }
+            },
+            reg_password1: {
+                selector: 'password',
+                label: 'Password',
+                type: InputTypes.password,
+                value: '',
+                validators: [Validators.required, Validators.pattern(passwordRegex)],
+                errorMessages: {
+                    required: 'Password is required',
+                    pattern: 'Please introduce a valid password'
+                },
+                hint: 'Must begin with "a".'
+            },
+            reg_password2: {
+                selector: 'password2',
+                label: 'Password confirmation',
+                type: InputTypes.password,
+                value: '',
+                validators: [Validators.required, Validators.pattern(passwordRegex)],
+                errorMessages: {
+                    required: 'Password confirmation is required',
+                    pattern: 'Please introduce a valid password',
+                    unmatched: 'Does not match first Password'
+                },
+                hint: 'Must begin with "a".'
             }
         };
+
+        const data = dataMap[fieldCode];
+        if (data) {
+            return data;
+        }
+        throw new Error(`Fieldcode ${fieldCode} not found`);
     }
+
 }

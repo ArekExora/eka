@@ -9,7 +9,6 @@ import { AlertService, UserService } from '@app/_services';
     styleUrls: ['login.component.scss']
 })
 export class LoginComponent implements OnInit {
-    heading: string;
     action: string;
     returnUrl: string;
     loading = false;
@@ -25,10 +24,11 @@ export class LoginComponent implements OnInit {
 
     ngOnInit() {
         this.action = this.route.snapshot.data.action;
-        this.heading = this.action === 'register' ? 'Register' : 'Login';
+        const heading = this.action === 'register' ? 'Register' : 'Login';
         this.formData = {
-            primaryText: this.heading,
-            fields: this.action === 'register' ? ['username', 'email', 'password', 'password2'] : ['username', 'password']
+            heading,
+            primaryText: heading,
+            fields: this.action === 'register' ? ['reg_username', 'reg_email', 'reg_password1', 'reg_password2'] : ['username', 'password']
         };
         this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
     }
@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
         this.loading = true;
         this.userService[this.action](data)
             .subscribe(
-                user => {
+                () => {
                     this.router.navigate([this.returnUrl]);
                 },
                 error => {
@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
         // verify both passwords are the same.
         if (this.action === 'register' && data.password !== data.password2) {
             this.alertService.error('Passwords don\'t match!', { autoClose: true });
-            this.errors = [{ field: 'password2', type: 'generic' }];
+            this.errors = [{ field: 'password2', type: 'unmatched' }];
             return false;
         }
         return true;

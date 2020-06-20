@@ -1,19 +1,12 @@
-﻿<div class="holder col-md-6 offset-md-3 mt-5">
-    <div class="card">
-        <h4 class="card-header">{{ heading }}</h4>
-        <div class="card-body">
-            <eka-form [model]="formData" [loading]="loading" [errors]="errors" (submitted)="onSubmit($event)">
-                <div class="sub-text" [ngSwitch]="action">
-                    <div *ngSwitchCase="'login'">
-                        New around here?
-                        <a routerLink="../register" queryParamsHandling="preserve" class="btn btn-link">Register</a>
-                    </div>
-                    <div *ngSwitchCase="'register'">
-                        Already have an account?
-                        <a routerLink="../login" queryParamsHandling="preserve" class="btn btn-link">Log in</a>
-                    </div>
-                </div>
-            </eka-form>
+﻿<eka-form [model]="formData" [loading]="loading" [errors]="errors" (submitted)="onSubmit($event)">
+    <div class="sub-text" [ngSwitch]="action">
+        <div *ngSwitchCase="'login'">
+            New around here?
+            <a routerLink="../register" queryParamsHandling="preserve" class="btn btn-link">Register</a>
+        </div>
+        <div *ngSwitchCase="'register'">
+            Already have an account?
+            <a routerLink="../login" queryParamsHandling="preserve" class="btn btn-link">Log in</a>
         </div>
     </div>
-</div>
+</eka-form>

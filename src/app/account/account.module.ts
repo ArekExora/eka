@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { LoggedinGuard } from './loggedin.guard';
 import { NgModule } from '@angular/core';
 import { EkaFormsModule } from '@app/forms';
 import { AccountRoutingModule } from './account-routing.module';
+import { LoggedinGuard } from './loggedin.guard';
 import { LoginComponent } from './login.component';
 
 

@@ -13,6 +13,7 @@ export class FormComponent implements OnInit, OnChanges {
     @Input() loading = false;
     @Output() submitted = new EventEmitter();
     data: EkaFormData;
+    fields: string[] = [];
 
     constructor(
         private formService: FormService,
@@ -20,6 +21,7 @@ export class FormComponent implements OnInit, OnChanges {
 
     ngOnInit() {
         this.data = this.formService.parseData(this.model);
+        this.fields = Object.keys(this.data.form.controls);
     }
 
     ngOnChanges({ errors }: SimpleChanges) {
