@@ -1,0 +1,45 @@
+mat-table {
+    cursor: pointer;
+    user-select: none;
+    width: 100%;
+
+    mat-row:hover .join-btn {
+        opacity: 100%;
+        transition: opacity 0.5s ease-in-out;
+        visibility: visible;
+    }
+}
+
+.join-btn {
+    margin-right: 10px;
+    opacity: 0%;
+    transition: opacity 0.5s ease-in-out;
+    visibility: hidden;
+    width: 100px;
+}
+
+.holder {
+    height: 400px;
+}
+
+.table-holder {
+    height: 100%;
+    overflow: auto;
+}
+
+.mat-column-id {
+    max-width: 25%;
+}
+
+.mat-column-game {
+    max-width: 25%;
+}
+
+.mat-column-users {
+    max-width: 10%;
+}
+
+.mat-column-actions {
+    justify-content: flex-end;
+    max-width: 40%;
+}

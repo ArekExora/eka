@@ -2,6 +2,9 @@
   "name": "eka",
   "version": "0.0.0",
   "scripts": {
+    "client:w": "ng run Eka:build --watch",
+    "server:w": "ng run Eka:server --watch",
+    "launch:w": "nodemon --watch dist/Eka/server --exec \"node dist/Eka/server/main.js\"",
     "start": "concurrently --kill-others \"ng run Eka:build --watch\" \"ng run Eka:server --watch\"",
     "prod": "ng run Eka:build:production && ng run Eka:server:production",
     "launch": "nodemon --watch dist --exec \"node dist/Eka/server/main.js\"",

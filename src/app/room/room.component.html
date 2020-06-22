@@ -2,11 +2,10 @@
     <div class="row upper">
         <div class="main-view col-md-9">
             <h3 class="title">ROOM LIST {{connectedUsers}} connected users</h3>
-            <div class="room-list">
-                <div class="room-data" *ngFor="let room of roomList" (click)="selectRoom(room)">{{room.id}}, {{room.game}}</div>
-            </div>
+            <eka-room-list (roomSelected)="selectRoom($event)" (roomJoined)="joinRoom($event)"
+            ></eka-room-list>
         </div>
-        <div class="side-view col-md-3">
+        <!-- <div class="side-view col-md-3">
             <h2 class="title">ROOM INFO</h2>
             <div *ngIf="selectedRoom">
                 <div> Name: {{selectedRoom.id}}</div>
@@ -17,11 +16,11 @@
                 <button (click)="joinRoom(selectedRoom)">Join</button>
                 <button (click)="leaveRoom(selectedRoom)">Leave</button>
             </div>
-        </div>
+        </div> -->
     </div>
-    <div class="row lower">
+    <!-- <div class="row lower">
         <div class="main-view col">
             <h3 class="title">GENERAL INFO</h3>
         </div>
-    </div>
+    </div> -->
 </div>

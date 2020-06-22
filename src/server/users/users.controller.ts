@@ -24,7 +24,7 @@ export class UsersController {
         this.reconnect = this.reconnect.bind(this);
 
         // MOCK DATA TO EASE TESTING.
-        this.registerService.register({ username: 'test', password: 'Testing1', email: 'test@test.com' } as any)
+        this.registerService.register({ username: 'test', password: 'asdf', email: 'test@test.com' } as any)
             .subscribe(usr => console.log(usr));
     }
 

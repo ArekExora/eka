@@ -1,0 +1,30 @@
+<div class="holder mat-table mat-elevation-z8">
+    <div class="table-holder" *ngIf="dataSource">
+        <mat-table matSort [dataSource]="dataSource">
+            <ng-container matColumnDef="id">
+                <mat-header-cell mat-sort-header *matHeaderCellDef> Name </mat-header-cell>
+                <mat-cell *matCellDef="let room"> {{room.id}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="game">
+                <mat-header-cell mat-sort-header *matHeaderCellDef> Game </mat-header-cell>
+                <mat-cell *matCellDef="let room"> {{room.game}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="users">
+                <mat-header-cell *matHeaderCellDef> Users </mat-header-cell>
+                <mat-cell *matCellDef="let room"> {{room.connectedUsers.length}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                <mat-cell *matCellDef="let room"> 
+                    <button mat-raised-button color="primary" class="join-btn"
+                        (click)="joinRoom($event, room)" (mousedown)="$event.stopPropagation()"
+                    >Join</button>
+                    <mat-icon aria-hidden="false" aria-label="More info">more_horiz</mat-icon>
+                </mat-cell>
+            </ng-container>
+            
+            <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+            <mat-row matRipple *matRowDef="let row; columns: displayedColumns;" (click)="selectRoom(row)"></mat-row>
+        </mat-table>
+    </div>
+</div>

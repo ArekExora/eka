@@ -10,5 +10,5 @@ export class StoredRoom {
 
 export class Room extends StoredRoom {
     persistent: boolean;
-    connectedUsers: User[];
+    connectedUsers: Partial<User>[];
 }

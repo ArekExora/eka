@@ -1,8 +1,52 @@
+// Angular material theming.
+@import '~@angular/material/theming';
+@include mat-core();
+
 // @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 // @import '@angular/material/prebuilt-themes/purple-green.css';
 // @import '@angular/material/prebuilt-themes/indigo-pink.css';
-@import '@angular/material/prebuilt-themes/pink-bluegrey.css';
+// @import '@angular/material/prebuilt-themes/pink-bluegrey.css';
+$deeppurple-amber-theme: mat-light-theme(mat-palette($mat-deep-purple), mat-palette($mat-amber));
+$indigo-pink-theme: mat-light-theme(mat-palette($mat-indigo), mat-palette($mat-pink));
+$purple-green-theme: mat-dark-theme(mat-palette($mat-purple), mat-palette($mat-green));
+$pink-bluegrey-theme: mat-dark-theme(mat-palette($mat-pink), mat-palette($mat-blue-grey));
+$theme: $purple-green-theme;
 
 /* You can add global styles to this file, and also import other style files */
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    margin: 0;
+}
+
+button:focus {
+    outline: none;
+}
+
+@mixin scrollbar-theme($theme) {
+    $bar-color: map-get($theme, primary);
+    
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 5px grey;
+        border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: mat-color($bar-color, default, 0.7);
+        border-radius: 10px;
+        box-shadow: inset 0 0 10px grey;
+        cursor: pointer;
+         
+        &:hover {
+            background: mat-color($bar-color);
+        }
+    }
+}
+
+@include angular-material-theme($theme);
+@include scrollbar-theme($theme);

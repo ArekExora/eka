@@ -6,7 +6,14 @@ import { RoomsPersistenceService } from './rooms-persistence.service';
 
 export class RoomsController {
     private roomList: Room[] = [
-        { id: 'Verde', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] }
+        { id: 'Verde1', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
+        { id: 'Verde2', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
+        { id: 'Verde3', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
+        { id: 'Verde4', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
+        { id: 'Verde5', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
+        { id: 'Verde6', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
+        { id: 'Verde7', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
+        { id: 'Verde8', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
     ];
 
     constructor(
@@ -68,7 +75,7 @@ export class RoomsController {
         }
 
         user.room = roomName;
-        room.connectedUsers.push(user);
+        room.connectedUsers.push({ username: user.username, id: user.id });
         return room.connectedUsers.length;
     }
 

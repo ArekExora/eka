@@ -6,7 +6,14 @@ import { SingletonService } from '../_services';
 
 export class RoomsPersistenceService {
     private roomListMock: StoredRoom[] = [
-        { id: 'Roja', password: '', isPrivate: false, game: 'Ajedrez' }
+        { id: 'Roja1', password: '', isPrivate: false, game: 'Ajedrez' },
+        { id: 'Roja2', password: '', isPrivate: false, game: 'Ajedrez' },
+        { id: 'Roja3', password: '', isPrivate: false, game: 'Ajedrez' },
+        { id: 'Roja4', password: '', isPrivate: false, game: 'Ajedrez' },
+        { id: 'Roja5', password: '', isPrivate: false, game: 'Ajedrez' },
+        { id: 'Roja6', password: '', isPrivate: false, game: 'Ajedrez' },
+        { id: 'Roja7', password: '', isPrivate: false, game: 'Ajedrez' },
+        { id: 'Roja8', password: '', isPrivate: false, game: 'Ajedrez' },
     ];
 
     constructor(){
