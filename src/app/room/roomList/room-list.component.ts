@@ -1,26 +1,12 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Output, ViewChild, OnDestroy } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/Table';
 import { Room } from '@app/_models';
+import { BehaviorSubject, of } from 'rxjs';
+import { catchError, finalize } from 'rxjs/operators';
 import { RoomService } from '../room.service';
 
 const roomList: Room[] = [
-    { id: 'Verde1', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [{}, {}] },
-    { id: 'Verde2', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
-    { id: 'Verde3', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
-    { id: 'Verde4', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [{}, {}, {}, {}] },
-    { id: 'Verde5', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
-    { id: 'Verde6', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
-    { id: 'Verde7', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [{}, {}, {}] },
-    { id: 'Verde8', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
-    { id: 'Verde1', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [{}, {}] },
-    { id: 'Verde2', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
-    { id: 'Verde3', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
-    { id: 'Verde4', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [{}, {}, {}, {}] },
-    { id: 'Verde5', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
-    { id: 'Verde6', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
-    { id: 'Verde7', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [{}, {}, {}] },
-    { id: 'Verde8', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
     { id: 'Verde1', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [{}, {}] },
     { id: 'Verde2', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
     { id: 'Verde3', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
@@ -36,29 +22,31 @@ const roomList: Room[] = [
     templateUrl: 'room-list.component.html',
     styleUrls: ['room-list.component.scss']
 })
-export class RoomListComponent implements OnInit{
+export class RoomListComponent implements AfterViewInit, OnDestroy{
+    @ViewChild(MatSort) sort: MatSort;
+
     @Output() roomSelected: EventEmitter<Room> = new EventEmitter();
     @Output() roomJoined: EventEmitter<Room> = new EventEmitter();
-    displayedColumns = ['id', 'game', 'users', 'actions'];
-    dataSource: MatTableDataSource<Room> = new MatTableDataSource(roomList);
 
-    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    displayedColumns = ['id', 'game', 'users', 'actions'];
+    dataSource: MatTableDataSource<Room> = new MatTableDataSource<Room>();
+
+    private loadingSubject = new BehaviorSubject<boolean>(false);
+    loading$ = this.loadingSubject.asObservable();
 
     constructor(
-        private roomService: RoomService,
-        private changeDetectorRef: ChangeDetectorRef
+        private roomService: RoomService
     ) {
-
+        this.dataSource.sortingDataAccessor = this.sortingDataAccessorFn;
+        this.loadRooms();
     }
 
-    ngOnInit() {
-        // this.roomService.getAllRooms().subscribe(rooms => {
-        //     this.dataSource = new MatTableDataSource(rooms);
-        //     this.dataSource.sort = this.sort;
-        //     this.changeDetectorRef.detectChanges();
-        // });
+    ngAfterViewInit() {
         this.dataSource.sort = this.sort;
-        // this.dataSource.filter = '4';
+    }
+
+    ngOnDestroy() {
+        this.loadingSubject.complete();
     }
 
     selectRoom(room: Room) {
@@ -68,5 +56,23 @@ export class RoomListComponent implements OnInit{
     joinRoom(event: Event, room: Room) {
         event.stopPropagation();
         this.roomJoined.emit(room);
+    }
+
+    loadRooms() {
+        this.loadingSubject.next(true);
+
+        this.roomService.getAllRooms().pipe(
+            catchError(() => of([])),
+            finalize(() => this.loadingSubject.next(false))
+        ).subscribe(rooms => this.dataSource.data = rooms);
+    }
+
+    private sortingDataAccessorFn(room: Room, sortHeaderId: string) {
+        switch (sortHeaderId) {
+            case 'users':
+                return room.connectedUsers.length;
+            default:
+                return room[sortHeaderId];
+        }
     }
 }

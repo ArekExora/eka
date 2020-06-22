@@ -5,6 +5,7 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/Icon';
 import { MatInputModule } from '@angular/material/Input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/Table';
 import { MatToolbarModule } from '@angular/material/Toolbar';
@@ -17,6 +18,7 @@ import { MatToolbarModule } from '@angular/material/Toolbar';
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
+    MatProgressSpinnerModule,
     MatRippleModule,
     MatSortModule,
     MatTableModule,

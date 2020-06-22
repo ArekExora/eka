@@ -1,5 +1,5 @@
 <div class="holder mat-table mat-elevation-z8">
-    <div class="table-holder" *ngIf="dataSource">
+    <div class="table-holder">
         <mat-table matSort [dataSource]="dataSource">
             <ng-container matColumnDef="id">
                 <mat-header-cell mat-sort-header *matHeaderCellDef> Name </mat-header-cell>
@@ -10,7 +10,7 @@
                 <mat-cell *matCellDef="let room"> {{room.game}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="users">
-                <mat-header-cell *matHeaderCellDef> Users </mat-header-cell>
+                <mat-header-cell mat-sort-header *matHeaderCellDef> Users </mat-header-cell>
                 <mat-cell *matCellDef="let room"> {{room.connectedUsers.length}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="actions">
@@ -27,4 +27,8 @@
             <mat-row matRipple *matRowDef="let row; columns: displayedColumns;" (click)="selectRoom(row)"></mat-row>
         </mat-table>
     </div>
+</div>
+<button (click)="loadRooms()">LOAD</button>
+<div class="spinner-container" *ngIf="loading$ | async">
+    <mat-spinner></mat-spinner>
 </div>
