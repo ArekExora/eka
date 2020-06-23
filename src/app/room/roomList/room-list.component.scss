@@ -19,7 +19,9 @@ mat-table {
 }
 
 .holder {
+    border-radius: 5px;
     height: 400px;
+    overflow: hidden;
 }
 
 .table-holder {
@@ -27,27 +29,41 @@ mat-table {
     overflow: auto;
 }
 
-.mat-column-id {
-    max-width: 25%;
-}
-
-.mat-column-owner {
-    max-width: 25%;
-}
-
-.mat-column-game {
-    max-width: 25%;
+.mat-column-id, .mat-column-owner, .mat-column-game {
+    width: 25%;
 }
 
 .mat-column-users {
-    max-width: 10%;
+    width: 10%;
 }
 
 .mat-column-actions {
     justify-content: flex-end;
-    max-width: 40%;
+    min-width: 170px;
+    width: 40%;
 }
 
 .hidden {
     display: none;
+}
+
+mat-icon.spinning {
+    animation: spin-animation 1s infinite;
+}
+
+mat-icon.spaced {
+    margin-right: 5px;
+}
+
+mat-icon.addIcon.reverse {
+    transform: rotate(45deg);
+}
+
+@keyframes spin-animation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(359deg);
+    }
 }

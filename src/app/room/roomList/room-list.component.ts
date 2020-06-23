@@ -20,6 +20,7 @@ export class RoomListComponent implements AfterViewInit, OnDestroy{
     displayedColumns = ['id', 'owner', 'game', 'users', 'actions'];
     secondaryColumns = [];
     isFiltering = false;
+    isAdding = false;
     dataSource: MatTableDataSource<Room> = new MatTableDataSource<Room>();
     searchData = {
         primaryText: 'Search',
@@ -69,10 +70,18 @@ export class RoomListComponent implements AfterViewInit, OnDestroy{
 
     toggleFiltering() {
         this.isFiltering = !this.isFiltering;
+        this.isAdding = false;
         this.secondaryColumns = this.isFiltering ? ['filter'] : [];
         if (!this.isFiltering) {
             this.dataSource.filter = '';
         }
+    }
+
+    toogleAdding() {
+        this.isAdding = !this.isAdding;
+        this.isFiltering = false;
+        this.dataSource.filter = '';
+        this.secondaryColumns = this.isAdding ? ['addRoom'] : [];
     }
 
     private sortingDataAccessorFn(room: Room, sortHeaderId: string) {

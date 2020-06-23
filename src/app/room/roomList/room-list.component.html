@@ -19,8 +19,14 @@
             </ng-container>
             <ng-container matColumnDef="actions">
                 <mat-header-cell *matHeaderCellDef>
-                    <mat-icon aria-hidden="false" aria-label="Filter" (click)="toggleFiltering()"
+                    <mat-icon aria-hidden="false" aria-label="Refresh" (click)="loadRooms()"
+                        [ngClass]="{ 'spaced': true, 'spinning': loading$ | async }"
+                    >autorenew</mat-icon>
+                    <mat-icon aria-hidden="false" aria-label="Filter" (click)="toggleFiltering()" class="spaced"
                     >{{ isFiltering ? 'search_off' : 'search' }}</mat-icon>
+                    <mat-icon aria-hidden="false" aria-label="Refresh" (click)="toogleAdding()"
+                        [ngClass]="{ 'addIcon': true, 'reverse': isAdding }"
+                    >add_circle</mat-icon>
                 </mat-header-cell>
                 <mat-cell *matCellDef="let room"> 
                     <button mat-raised-button color="primary" class="join-btn"
@@ -34,14 +40,17 @@
                     <eka-condensed-form [model]="searchData" [submitOn]="['keyup']" (submitted)="filter($event)"></eka-condensed-form>
                 </mat-header-cell>
             </ng-container>
+            <ng-container matColumnDef="addRoom">
+                <mat-header-cell *matHeaderCellDef>
+                    ADD ROOM
+                </mat-header-cell>
+            </ng-container>
             
             <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
-            <mat-header-row *matHeaderRowDef="secondaryColumns; sticky: true" [ngClass]="{'hidden': !secondaryColumns.length}"></mat-header-row>
+            <mat-header-row *matHeaderRowDef="secondaryColumns; sticky: true"
+                [ngClass]="{ 'hidden': !secondaryColumns.length }"
+            ></mat-header-row>
             <mat-row matRipple *matRowDef="let row; columns: displayedColumns;" (click)="selectRoom(row)"></mat-row>
         </mat-table>
     </div>
-</div>
-<button (click)="loadRooms()">LOAD</button>
-<div class="spinner-container" *ngIf="loading$ | async">
-    <mat-spinner></mat-spinner>
 </div>
