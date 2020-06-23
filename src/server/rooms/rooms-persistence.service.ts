@@ -10,7 +10,7 @@ export class RoomsPersistenceService {
         { id: 'Roja2', password: '', owner: 'test2', isPrivate: false, game: 'Damas' },
         { id: 'Roja3', password: '', owner: 'test3', isPrivate: false, game: 'Ajedrez' },
         { id: 'Roja4', password: '', owner: 'test4', isPrivate: false, game: 'Ajedrez' },
-        { id: 'Roja5', password: '', owner: 'test', isPrivate: false, game: 'Damas' },
+        { id: 'Roja5', password: '', owner: 'test', isPrivate: false, game: 'Damas', description: 'A simple checkers game.' },
         { id: 'Roja6', password: '', owner: 'test2', isPrivate: false, game: 'Ajedrez' },
         { id: 'Roja7', password: '', owner: 'test3', isPrivate: false, game: 'Dardos' },
         { id: 'Roja8', password: '', owner: 'test4', isPrivate: false, game: 'Ajedrez' },
@@ -62,7 +62,7 @@ export class RoomsPersistenceService {
     }
 
     private adaptToDB(room: StoredRoom): StoredRoom {
-        const { id, password, owner, isPrivate, game } = room;
-        return { id, password, owner, isPrivate, game };
+        const { id, password, owner, isPrivate, game, description } = room;
+        return { id, password, owner, isPrivate, game, description };
     }
 }

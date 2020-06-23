@@ -6,7 +6,8 @@ import { RoomsPersistenceService } from './rooms-persistence.service';
 
 export class RoomsController {
     private roomList: Room[] = [
-        { id: 'Verde1', password: '', owner: 'test', isPrivate: false, game: 'Sudoku', persistent: false, connectedUsers: [] },
+        { id: 'Verde1', password: '', owner: 'test', isPrivate: false, game: 'Sudoku',
+            description: 'Un mágico mundo de ilusión y felicidad.', persistent: false, connectedUsers: [] },
         { id: 'Verde2', password: '', owner: 'test2', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
         { id: 'Verde3', password: '', owner: 'test3', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
         { id: 'Verde4', password: '', owner: 'test4', isPrivate: false, game: 'Parchis', persistent: false, connectedUsers: [] },
@@ -38,8 +39,8 @@ export class RoomsController {
     }
 
     private adaptToService(room: Room): Room {
-        const { id, password, owner, isPrivate, game } = room;
-        return { id, password, owner, isPrivate, game, persistent: true, connectedUsers: [] };
+        const { id, password, owner, isPrivate, game, description } = room;
+        return { id, password, owner, isPrivate, game, description, persistent: true, connectedUsers: [] };
     }
 
     // TODO: Use proper error handling.

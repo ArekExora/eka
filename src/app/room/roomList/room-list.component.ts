@@ -15,24 +15,25 @@ import { RoomService } from '../room.service';
       trigger('expand', [
         state('collapsed', style({ height: '0px' })),
         state('expanded', style({ height: '48px' })),
-        transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
+        state('expandedDouble', style({ height: '96px' })),
+        transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        transition('expandedDouble <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
       ])
     ]
 })
 export class RoomListComponent implements AfterViewInit, OnDestroy{
     @ViewChild(MatSort) sort: MatSort;
-
     @Output() roomJoined: EventEmitter<Room> = new EventEmitter();
 
-    displayedColumns = ['id', 'owner', 'game', 'users', 'actions'];
-    secondaryColumns = [];
+    displayedColumns = ['id', 'game', 'users', 'actions'];
+    detailColumns = ['owner', 'description'];
     isFiltering = false;
     isAdding = false;
     selectedRoom: Room = null;
     dataSource: MatTableDataSource<Room> = new MatTableDataSource<Room>();
     searchData = {
         primaryText: 'Search',
-        fields: ['room_filter_name', 'room_filter_owner', 'room_filter_game']
+        fields: ['room_filter_name', 'room_filter_game', 'room_filter_owner']
     };
 
     private loadingSubject = new BehaviorSubject<boolean>(false);
@@ -79,7 +80,6 @@ export class RoomListComponent implements AfterViewInit, OnDestroy{
     toggleFiltering() {
         this.isFiltering = !this.isFiltering;
         this.isAdding = false;
-        this.secondaryColumns = this.isFiltering ? ['filter'] : [];
         if (!this.isFiltering) {
             this.dataSource.filter = '';
         }
@@ -89,7 +89,6 @@ export class RoomListComponent implements AfterViewInit, OnDestroy{
         this.isAdding = !this.isAdding;
         this.isFiltering = false;
         this.dataSource.filter = '';
-        this.secondaryColumns = this.isAdding ? ['addRoom'] : [];
     }
 
     private sortingDataAccessorFn(room: Room, sortHeaderId: string) {

@@ -11,7 +11,8 @@ export class CondensedFormComponent implements OnInit, OnChanges {
     @Input() model: EkaFormModel;
     @Input() errors = [];
     @Input() submitOn: string[] = [];
-    @Output() submitted = new EventEmitter();
+    @Output() primaryAction = new EventEmitter();
+    @Output() secondaryAction = new EventEmitter();
     data: EkaFormData;
     fields: string[] = [];
 
@@ -30,18 +31,18 @@ export class CondensedFormComponent implements OnInit, OnChanges {
         });
     }
 
-    onSubmit() {
-        this.sendData();
+    primaryClick() {
+        this.primaryAction.emit(this.data.form.getRawValue());
+    }
+
+    secondaryClick() {
+        this.secondaryAction.emit(this.data.form.getRawValue());
     }
 
     onKeyUp() {
         if (this.submitOn.includes('keyup')) {
-            this.sendData();
+            this.primaryAction.emit(this.data.form.getRawValue());
         }
-    }
-
-    private sendData() {
-        this.submitted.emit(this.data.form.getRawValue());
     }
 
     get disabled() {

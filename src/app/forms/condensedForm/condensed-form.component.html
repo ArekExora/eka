@@ -1,10 +1,10 @@
-﻿<form class="condensed-form" [formGroup]="data.form" (ngSubmit)="onSubmit()">
+﻿<form class="condensed-form" [formGroup]="data.form" (ngSubmit)="primaryClick()">
     <eka-gen-input *ngFor="let field of fields" [form]="data.form" [selector]="field" (keyup)="onKeyUp()"></eka-gen-input>
     <span class="spacer"></span>
-    <button type="submit" [disabled]="disabled" mat-raised-button color="primary">
+    <button type="submit" [disabled]="disabled" (click)="primaryClick()" mat-raised-button color="primary">
         {{ data.primaryText }}
     </button>
-    <button type="button" *ngIf="data.secondaryText" mat-raised-button>
+    <button type="button" *ngIf="data.secondaryText" (click)="secondaryClick()" mat-raised-button>
         {{ data.secondaryText }}
     </button>
 </form>

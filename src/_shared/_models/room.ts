@@ -6,6 +6,7 @@ export class StoredRoom {
     owner: string;
     isPrivate: boolean;
     game: string;
+    description?: string;
 }
 
 

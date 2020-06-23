@@ -5,10 +5,6 @@
                 <mat-header-cell mat-sort-header *matHeaderCellDef> Name </mat-header-cell>
                 <mat-cell *matCellDef="let room"> {{room.id}} </mat-cell>
             </ng-container>
-            <ng-container matColumnDef="owner">
-                <mat-header-cell mat-sort-header *matHeaderCellDef> Owner </mat-header-cell>
-                <mat-cell *matCellDef="let room"> {{room.owner}} </mat-cell>
-            </ng-container>
             <ng-container matColumnDef="game">
                 <mat-header-cell mat-sort-header *matHeaderCellDef> Game </mat-header-cell>
                 <mat-cell *matCellDef="let room"> {{room.game}} </mat-cell>
@@ -17,10 +13,18 @@
                 <mat-header-cell mat-sort-header *matHeaderCellDef> Users </mat-header-cell>
                 <mat-cell *matCellDef="let room"> {{room.connectedUsers.length}} </mat-cell>
             </ng-container>
-            <ng-container matColumnDef="details">
-                <mat-cell *matCellDef="let room" class="details"
-                    [@expand]="room == selectedRoom ? 'expanded' : 'collapsed'"
-                >DETAILS {{room.id}}</mat-cell>
+            <ng-container matColumnDef="owner">
+                <mat-cell *matCellDef="let room" class="expandable-cell"
+                    [@expand]="room === selectedRoom ? 'expanded' : 'collapsed'"
+                >
+                    <mat-icon>admin_panel_settings</mat-icon>
+                    <span matTooltip="Room owner" matTooltipPosition="after" class="owner">{{room.owner}}</span>
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="description">
+                <mat-cell *matCellDef="let room" class="expandable-cell"
+                    [@expand]="room === selectedRoom ? 'expanded' : 'collapsed'"
+                ><em>{{room.description || 'description'}}</em></mat-cell>
             </ng-container>
             <ng-container matColumnDef="actions">
                 <mat-header-cell *matHeaderCellDef>
@@ -41,24 +45,28 @@
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="filter">
-                <mat-header-cell *matHeaderCellDef>
-                    <eka-condensed-form [model]="searchData" [submitOn]="['keyup']" (submitted)="filter($event)"></eka-condensed-form>
+                <mat-header-cell *matHeaderCellDef class="expandable-cell"
+                    [@expand]="isFiltering ? 'expanded' : 'collapsed'"
+                >
+                    <eka-condensed-form [model]="searchData" [submitOn]="['keyup']" (primaryAction)="filter($event)"
+                    ></eka-condensed-form>
                 </mat-header-cell>
             </ng-container>
             <ng-container matColumnDef="addRoom">
-                <mat-header-cell *matHeaderCellDef>
+                <mat-header-cell *matHeaderCellDef class="expandable-cell"
+                    [@expand]="isAdding ? 'expandedDouble' : 'collapsed'"
+                >
                     ADD ROOM
                 </mat-header-cell>
             </ng-container>
             
-            <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
-            <mat-header-row *matHeaderRowDef="secondaryColumns; sticky: true"
-                [ngClass]="{ 'hidden': !secondaryColumns.length }"
-            ></mat-header-row>
+            <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="borderless-row"></mat-header-row>
+            <mat-header-row *matHeaderRowDef="['filter']; sticky: true" class="borderless-row expandable-row"></mat-header-row>
+            <mat-header-row *matHeaderRowDef="['addRoom']; sticky: true" class="expandable-row"></mat-header-row>
             <mat-row matRipple *matRowDef="let room; columns: displayedColumns;"
-                (click)="selectRoom(room)" class="info-row"
+                (click)="selectRoom(room)" class="borderless-row"
             ></mat-row>
-            <mat-row *matRowDef="let row; columns: ['details'];" class="details-row"></mat-row>
+            <mat-row *matRowDef="let row; columns: detailColumns;" class="expandable-row"></mat-row>
         </mat-table>
     </div>
 </div>
