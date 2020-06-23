@@ -135,6 +135,30 @@ export class FormService {
                     unmatched: 'Does not match first Password'
                 },
                 hint: 'Must begin with "a".'
+            },
+            room_filter_name: {
+                selector: 'name',
+                label: 'Name',
+                type: InputTypes.text,
+                value: '',
+                validators: [],
+                errorMessages: {}
+            },
+            room_filter_owner: {
+                selector: 'owner',
+                label: 'Owner',
+                type: InputTypes.text,
+                value: '',
+                validators: [],
+                errorMessages: {}
+            },
+            room_filter_game: {
+                selector: 'game',
+                label: 'Game',
+                type: InputTypes.text,
+                value: '',
+                validators: [],
+                errorMessages: {}
             }
         };
 

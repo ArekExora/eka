@@ -3,6 +3,7 @@ import { User } from './user';
 export class StoredRoom {
     id: string;
     password: string;
+    owner: string;
     isPrivate: boolean;
     game: string;
 }

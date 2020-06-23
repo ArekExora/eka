@@ -5,6 +5,10 @@
                 <mat-header-cell mat-sort-header *matHeaderCellDef> Name </mat-header-cell>
                 <mat-cell *matCellDef="let room"> {{room.id}} </mat-cell>
             </ng-container>
+            <ng-container matColumnDef="owner">
+                <mat-header-cell mat-sort-header *matHeaderCellDef> Owner </mat-header-cell>
+                <mat-cell *matCellDef="let room"> {{room.owner}} </mat-cell>
+            </ng-container>
             <ng-container matColumnDef="game">
                 <mat-header-cell mat-sort-header *matHeaderCellDef> Game </mat-header-cell>
                 <mat-cell *matCellDef="let room"> {{room.game}} </mat-cell>
@@ -14,7 +18,10 @@
                 <mat-cell *matCellDef="let room"> {{room.connectedUsers.length}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="actions">
-                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                <mat-header-cell *matHeaderCellDef>
+                    <mat-icon aria-hidden="false" aria-label="Filter" (click)="toggleFiltering()"
+                    >{{ isFiltering ? 'search_off' : 'search' }}</mat-icon>
+                </mat-header-cell>
                 <mat-cell *matCellDef="let room"> 
                     <button mat-raised-button color="primary" class="join-btn"
                         (click)="joinRoom($event, room)" (mousedown)="$event.stopPropagation()"
@@ -22,8 +29,14 @@
                     <mat-icon aria-hidden="false" aria-label="More info">more_horiz</mat-icon>
                 </mat-cell>
             </ng-container>
+            <ng-container matColumnDef="filter">
+                <mat-header-cell *matHeaderCellDef>
+                    <eka-condensed-form [model]="searchData" [submitOn]="['keyup']" (submitted)="filter($event)"></eka-condensed-form>
+                </mat-header-cell>
+            </ng-container>
             
             <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+            <mat-header-row *matHeaderRowDef="secondaryColumns; sticky: true" [ngClass]="{'hidden': !secondaryColumns.length}"></mat-header-row>
             <mat-row matRipple *matRowDef="let row; columns: displayedColumns;" (click)="selectRoom(row)"></mat-row>
         </mat-table>
     </div>

@@ -31,6 +31,10 @@ mat-table {
     max-width: 25%;
 }
 
+.mat-column-owner {
+    max-width: 25%;
+}
+
 .mat-column-game {
     max-width: 25%;
 }
@@ -42,4 +46,8 @@ mat-table {
 .mat-column-actions {
     justify-content: flex-end;
     max-width: 40%;
+}
+
+.hidden {
+    display: none;
 }

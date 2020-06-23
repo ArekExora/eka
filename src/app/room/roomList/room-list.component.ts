@@ -1,21 +1,10 @@
-import { AfterViewInit, Component, EventEmitter, Output, ViewChild, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnDestroy, Output, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/Table';
 import { Room } from '@app/_models';
 import { BehaviorSubject, of } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 import { RoomService } from '../room.service';
-
-const roomList: Room[] = [
-    { id: 'Verde1', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [{}, {}] },
-    { id: 'Verde2', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
-    { id: 'Verde3', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
-    { id: 'Verde4', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [{}, {}, {}, {}] },
-    { id: 'Verde5', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
-    { id: 'Verde6', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
-    { id: 'Verde7', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [{}, {}, {}] },
-    { id: 'Verde8', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
-];
 
 @Component({
     selector: 'eka-room-list',
@@ -28,8 +17,14 @@ export class RoomListComponent implements AfterViewInit, OnDestroy{
     @Output() roomSelected: EventEmitter<Room> = new EventEmitter();
     @Output() roomJoined: EventEmitter<Room> = new EventEmitter();
 
-    displayedColumns = ['id', 'game', 'users', 'actions'];
+    displayedColumns = ['id', 'owner', 'game', 'users', 'actions'];
+    secondaryColumns = [];
+    isFiltering = false;
     dataSource: MatTableDataSource<Room> = new MatTableDataSource<Room>();
+    searchData = {
+        primaryText: 'Search',
+        fields: ['room_filter_name', 'room_filter_owner', 'room_filter_game']
+    };
 
     private loadingSubject = new BehaviorSubject<boolean>(false);
     loading$ = this.loadingSubject.asObservable();
@@ -38,6 +33,7 @@ export class RoomListComponent implements AfterViewInit, OnDestroy{
         private roomService: RoomService
     ) {
         this.dataSource.sortingDataAccessor = this.sortingDataAccessorFn;
+        this.dataSource.filterPredicate = this.filterPredicateFn;
         this.loadRooms();
     }
 
@@ -67,6 +63,18 @@ export class RoomListComponent implements AfterViewInit, OnDestroy{
         ).subscribe(rooms => this.dataSource.data = rooms);
     }
 
+    filter(data: any) {
+        this.dataSource.filter = data;
+    }
+
+    toggleFiltering() {
+        this.isFiltering = !this.isFiltering;
+        this.secondaryColumns = this.isFiltering ? ['filter'] : [];
+        if (!this.isFiltering) {
+            this.dataSource.filter = '';
+        }
+    }
+
     private sortingDataAccessorFn(room: Room, sortHeaderId: string) {
         switch (sortHeaderId) {
             case 'users':
@@ -74,5 +82,13 @@ export class RoomListComponent implements AfterViewInit, OnDestroy{
             default:
                 return room[sortHeaderId];
         }
+    }
+
+    private filterPredicateFn(room: Room, filter: any): boolean {
+        const { name, owner, game } = filter;
+
+        return room.id.toLowerCase().includes(name.toLowerCase())
+            && room.owner.toLowerCase().includes(owner.toLowerCase())
+            && room.game.toLowerCase().includes(game.toLowerCase());
     }
 }

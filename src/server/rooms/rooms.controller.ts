@@ -6,14 +6,14 @@ import { RoomsPersistenceService } from './rooms-persistence.service';
 
 export class RoomsController {
     private roomList: Room[] = [
-        { id: 'Verde1', password: '', isPrivate: false, game: 'Sudoku', persistent: false, connectedUsers: [] },
-        { id: 'Verde2', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
-        { id: 'Verde3', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
-        { id: 'Verde4', password: '', isPrivate: false, game: 'Parchis', persistent: false, connectedUsers: [] },
-        { id: 'Verde5', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
-        { id: 'Verde6', password: '', isPrivate: false, game: 'Sudoku', persistent: false, connectedUsers: [] },
-        { id: 'Verde7', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
-        { id: 'Verde8', password: '', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
+        { id: 'Verde1', password: '', owner: 'test', isPrivate: false, game: 'Sudoku', persistent: false, connectedUsers: [] },
+        { id: 'Verde2', password: '', owner: 'test2', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
+        { id: 'Verde3', password: '', owner: 'test3', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
+        { id: 'Verde4', password: '', owner: 'test4', isPrivate: false, game: 'Parchis', persistent: false, connectedUsers: [] },
+        { id: 'Verde5', password: '', owner: 'test', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
+        { id: 'Verde6', password: '', owner: 'test2', isPrivate: false, game: 'Sudoku', persistent: false, connectedUsers: [] },
+        { id: 'Verde7', password: '', owner: 'test3', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
+        { id: 'Verde8', password: '', owner: 'test4', isPrivate: false, game: 'Ajedrez', persistent: false, connectedUsers: [] },
     ];
 
     constructor(
@@ -38,8 +38,8 @@ export class RoomsController {
     }
 
     private adaptToService(room: Room): Room {
-        const { id, password, isPrivate, game } = room;
-        return { id, password, isPrivate, game, persistent: true, connectedUsers: [] };
+        const { id, password, owner, isPrivate, game } = room;
+        return { id, password, owner, isPrivate, game, persistent: true, connectedUsers: [] };
     }
 
     // TODO: Use proper error handling.
@@ -49,7 +49,7 @@ export class RoomsController {
             response.status(HttpCodes.Conflict).send('Room ID in use.');
         }
         console.log('CREAMOS UNA SALA');
-        const room = { id, password, isPrivate: false, game, persistent: false, connectedUsers: [] };
+        const room = { id, password, owner: 'FAKE OWNER', isPrivate: false, game, persistent: false, connectedUsers: [] };
         this.roomList.push(room);
         response.status(HttpCodes.OK).send(room);
     }

@@ -6,14 +6,14 @@ import { SingletonService } from '../_services';
 
 export class RoomsPersistenceService {
     private roomListMock: StoredRoom[] = [
-        { id: 'Roja1', password: '', isPrivate: false, game: 'Ajedrez' },
-        { id: 'Roja2', password: '', isPrivate: false, game: 'Damas' },
-        { id: 'Roja3', password: '', isPrivate: false, game: 'Ajedrez' },
-        { id: 'Roja4', password: '', isPrivate: false, game: 'Ajedrez' },
-        { id: 'Roja5', password: '', isPrivate: false, game: 'Damas' },
-        { id: 'Roja6', password: '', isPrivate: false, game: 'Ajedrez' },
-        { id: 'Roja7', password: '', isPrivate: false, game: 'Dardos' },
-        { id: 'Roja8', password: '', isPrivate: false, game: 'Ajedrez' },
+        { id: 'Roja1', password: '', owner: 'test', isPrivate: false, game: 'Ajedrez' },
+        { id: 'Roja2', password: '', owner: 'test2', isPrivate: false, game: 'Damas' },
+        { id: 'Roja3', password: '', owner: 'test3', isPrivate: false, game: 'Ajedrez' },
+        { id: 'Roja4', password: '', owner: 'test4', isPrivate: false, game: 'Ajedrez' },
+        { id: 'Roja5', password: '', owner: 'test', isPrivate: false, game: 'Damas' },
+        { id: 'Roja6', password: '', owner: 'test2', isPrivate: false, game: 'Ajedrez' },
+        { id: 'Roja7', password: '', owner: 'test3', isPrivate: false, game: 'Dardos' },
+        { id: 'Roja8', password: '', owner: 'test4', isPrivate: false, game: 'Ajedrez' },
     ];
 
     constructor(){
@@ -62,7 +62,7 @@ export class RoomsPersistenceService {
     }
 
     private adaptToDB(room: StoredRoom): StoredRoom {
-        const { id, password, isPrivate, game } = room;
-        return { id, password, isPrivate, game };
+        const { id, password, owner, isPrivate, game } = room;
+        return { id, password, owner, isPrivate, game };
     }
 }

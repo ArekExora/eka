@@ -5,6 +5,7 @@ import { RoomRoutingModule } from './room-routing.module';
 import { RoomComponent } from './room.component';
 import { RoomService } from './room.service';
 import { RoomListComponent } from './roomList';
+import { EkaFormsModule } from '@app/forms';
 
 @NgModule({
     declarations: [
@@ -17,6 +18,7 @@ import { RoomListComponent } from './roomList';
     imports: [
         CommonModule,
         RoomRoutingModule,
+        EkaFormsModule,
         MaterialModule
     ]
 })
