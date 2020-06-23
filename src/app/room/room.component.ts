@@ -8,17 +8,12 @@ import { SocketService } from '../_services';
     styleUrls: ['room.component.scss']
 })
 export class RoomComponent {
-    selectedRoom: Room = null;
     connectedUsers = 1;
 
     constructor(
         private socketService: SocketService
     ) {
         socketService.getUserCount().subscribe(count => this.connectedUsers = count);
-    }
-
-    selectRoom(room: Room) {
-        this.selectedRoom = room;
     }
 
     joinRoom(room: Room) {

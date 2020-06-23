@@ -21,9 +21,9 @@ import { MapModule } from './_trash-to-be-moved-to-games/map/map.module';
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
-    HttpClientModule,
-    ReactiveFormsModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
     MaterialModule,
     MapModule,
     AppRoutingModule,

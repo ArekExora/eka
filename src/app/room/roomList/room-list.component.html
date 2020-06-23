@@ -1,6 +1,6 @@
 <div class="holder mat-table mat-elevation-z8">
     <div class="table-holder">
-        <mat-table matSort [dataSource]="dataSource">
+        <mat-table matSort multiTemplateDataRows [dataSource]="dataSource">
             <ng-container matColumnDef="id">
                 <mat-header-cell mat-sort-header *matHeaderCellDef> Name </mat-header-cell>
                 <mat-cell *matCellDef="let room"> {{room.id}} </mat-cell>
@@ -16,6 +16,11 @@
             <ng-container matColumnDef="users">
                 <mat-header-cell mat-sort-header *matHeaderCellDef> Users </mat-header-cell>
                 <mat-cell *matCellDef="let room"> {{room.connectedUsers.length}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="details">
+                <mat-cell *matCellDef="let room" class="details"
+                    [@expand]="room == selectedRoom ? 'expanded' : 'collapsed'"
+                >DETAILS {{room.id}}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="actions">
                 <mat-header-cell *matHeaderCellDef>
@@ -50,7 +55,10 @@
             <mat-header-row *matHeaderRowDef="secondaryColumns; sticky: true"
                 [ngClass]="{ 'hidden': !secondaryColumns.length }"
             ></mat-header-row>
-            <mat-row matRipple *matRowDef="let row; columns: displayedColumns;" (click)="selectRoom(row)"></mat-row>
+            <mat-row matRipple *matRowDef="let room; columns: displayedColumns;"
+                (click)="selectRoom(room)" class="info-row"
+            ></mat-row>
+            <mat-row *matRowDef="let row; columns: ['details'];" class="details-row"></mat-row>
         </mat-table>
     </div>
 </div>

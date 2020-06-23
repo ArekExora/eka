@@ -26,7 +26,11 @@ mat-table {
 
 .table-holder {
     height: 100%;
-    overflow: auto;
+    overflow: hidden;
+
+    &:hover {
+        overflow: overlay;
+    }
 }
 
 .mat-column-id, .mat-column-owner, .mat-column-game {
@@ -66,4 +70,17 @@ mat-icon.addIcon.reverse {
     100% {
         transform: rotate(359deg);
     }
+}
+
+.info-row {
+    border-bottom-width: 0;
+  }
+
+.details-row {
+    min-height: 0;
+}
+
+.details {
+    overflow: hidden;
+    height: 0;
 }

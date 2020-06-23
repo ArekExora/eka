@@ -1,3 +1,4 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AfterViewInit, Component, EventEmitter, OnDestroy, Output, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/Table';
@@ -9,18 +10,25 @@ import { RoomService } from '../room.service';
 @Component({
     selector: 'eka-room-list',
     templateUrl: 'room-list.component.html',
-    styleUrls: ['room-list.component.scss']
+    styleUrls: ['room-list.component.scss'],
+    animations: [
+      trigger('expand', [
+        state('collapsed', style({ height: '0px' })),
+        state('expanded', style({ height: '48px' })),
+        transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
+      ])
+    ]
 })
 export class RoomListComponent implements AfterViewInit, OnDestroy{
     @ViewChild(MatSort) sort: MatSort;
 
-    @Output() roomSelected: EventEmitter<Room> = new EventEmitter();
     @Output() roomJoined: EventEmitter<Room> = new EventEmitter();
 
     displayedColumns = ['id', 'owner', 'game', 'users', 'actions'];
     secondaryColumns = [];
     isFiltering = false;
     isAdding = false;
+    selectedRoom: Room = null;
     dataSource: MatTableDataSource<Room> = new MatTableDataSource<Room>();
     searchData = {
         primaryText: 'Search',
@@ -47,7 +55,7 @@ export class RoomListComponent implements AfterViewInit, OnDestroy{
     }
 
     selectRoom(room: Room) {
-        this.roomSelected.emit(room);
+        this.selectedRoom = this.selectedRoom === room ? null : room;
     }
 
     joinRoom(event: Event, room: Room) {
