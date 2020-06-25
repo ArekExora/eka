@@ -26,6 +26,11 @@ button:focus {
     outline: none;
 }
 
+// Avoid stars for required component to change color on selection.
+eka-gen-input .mat-focused .mat-form-field-required-marker {
+    color: inherit;
+}
+
 @mixin scrollbar-theme($theme) {
     $bar-color: map-get($theme, primary);
     

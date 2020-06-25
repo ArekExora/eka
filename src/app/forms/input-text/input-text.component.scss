@@ -1,0 +1,30 @@
+﻿mat-form-field {
+    margin-bottom: 0.5rem;
+    width: 100%;
+}
+
+::ng-deep form.condensed mat-form-field {
+    margin-bottom: 0;
+
+    .mat-form-field-subscript-wrapper {
+        margin-top: 0.2em;
+    }
+
+    .mat-form-field-suffix {
+        top: 0.15em;
+    }
+
+    // Generic styles to shrink material form fields.
+    // Source: https://stackoverflow.com/questions/54760371/how-to-change-height-in-mat-form-field
+    .mat-form-field-flex > .mat-form-field-infix {
+        padding: 0 0 0.5em;
+    }
+
+    .mat-form-field-label-wrapper {
+        top: -1.5em;
+    }
+
+    &.mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+        transform: translateY(-1.1em) scale(.75);
+    }
+}

@@ -1,7 +1,8 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorCodes, HttpCodes } from '@app/_models';
-import { AlertService, UserService } from '@app/_services';
+import { AlertService, EkaFormGroup, FormService, UserService } from '@app/_services';
 
 
 @Component({
@@ -12,24 +13,21 @@ export class LoginComponent implements OnInit {
     action: string;
     returnUrl: string;
     loading = false;
-    errors = [];
-    formData: any;
+    form: EkaFormGroup;
+    errors = []; // TODO: Properly handle errors.
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
         private userService: UserService,
-        private alertService: AlertService
-    ) { }
+        private alertService: AlertService,
+        private formService: FormService,
+    ) {
+    }
 
     ngOnInit() {
         this.action = this.route.snapshot.data.action;
-        const heading = this.action === 'register' ? 'Register' : 'Login';
-        this.formData = {
-            heading,
-            primaryText: heading,
-            fields: this.action === 'register' ? ['reg_username', 'reg_email', 'reg_password1', 'reg_password2'] : ['username', 'password']
-        };
+        this.form = this.formService.generateForm(this.action);
         this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
     }
 

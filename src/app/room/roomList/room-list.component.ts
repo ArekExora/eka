@@ -3,6 +3,7 @@ import { AfterViewInit, Component, EventEmitter, OnDestroy, Output, ViewChild } 
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/Table';
 import { Room } from '@app/_models';
+import { EkaFormGroup, FormService } from '@app/_services';
 import { BehaviorSubject, of } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 import { RoomService } from '../room.service';
@@ -31,17 +32,16 @@ export class RoomListComponent implements AfterViewInit, OnDestroy{
     isAdding = false;
     selectedRoom: Room = null;
     dataSource: MatTableDataSource<Room> = new MatTableDataSource<Room>();
-    searchData = {
-        primaryText: 'Search',
-        fields: ['room_filter_name', 'room_filter_game', 'room_filter_owner']
-    };
+    searchForm: EkaFormGroup;
 
     private loadingSubject = new BehaviorSubject<boolean>(false);
     loading$ = this.loadingSubject.asObservable();
 
     constructor(
-        private roomService: RoomService
+        private roomService: RoomService,
+        formService: FormService
     ) {
+        this.searchForm = formService.generateForm('room_search');
         this.dataSource.sortingDataAccessor = this.sortingDataAccessorFn;
         this.dataSource.filterPredicate = this.filterPredicateFn;
         this.loadRooms();
@@ -80,14 +80,17 @@ export class RoomListComponent implements AfterViewInit, OnDestroy{
     toggleFiltering() {
         this.isFiltering = !this.isFiltering;
         this.isAdding = false;
-        if (!this.isFiltering) {
-            this.dataSource.filter = '';
-        }
+        this.clearFilter();
     }
 
     toogleAdding() {
         this.isAdding = !this.isAdding;
         this.isFiltering = false;
+        this.clearFilter();
+    }
+
+    private clearFilter() {
+        this.searchForm.patchValue({ name: '', owner: '', game: '' });
         this.dataSource.filter = '';
     }
 

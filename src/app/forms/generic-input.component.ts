@@ -1,13 +1,13 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ComponentFactoryResolver, Input, ViewContainerRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ComponentFactoryResolver, Input, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { FieldInterface } from '../field.interface';
-import { InputTypes } from '../_services';
-import { InputComponent } from './input.component';
+import { InputTypes } from '@app/_models';
+import { FieldInterface } from './field.interface';
+import { InputTextComponent } from './input-text';
 
 const typesMap = {
-    [InputTypes.text]:      InputComponent,
-    [InputTypes.email]:     InputComponent,
-    [InputTypes.password]:  InputComponent,
+    [InputTypes.text]:      InputTextComponent,
+    [InputTypes.email]:     InputTextComponent,
+    [InputTypes.password]:  InputTextComponent,
 };
 
 @Component({
@@ -20,7 +20,6 @@ export class GenericInputComponent implements AfterViewInit, FieldInterface{
     @ViewChild('container', {read: ViewContainerRef}) container;
 
     constructor(
-        // private viewContainerRef: ViewContainerRef,
         private componentFactoryResolver: ComponentFactoryResolver,
         private cdr: ChangeDetectorRef
     ) {

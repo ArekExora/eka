@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl, ValidatorFn } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { InputTypes } from '@app/_models';
 
-export enum InputTypes {
-    text = 'text',
-    email = 'email',
-    password = 'password'
-}
 
-export class EkaFormField {
+export class EkaFieldData {
     selector: string;
     label: string;
     type?: InputTypes;
@@ -17,54 +13,89 @@ export class EkaFormField {
     hint?: string;
 }
 
-export class EkaFormModel {
-    heading?: string;
-    primaryText: string;
-    secondaryText?: string;
-    fields: string[];
+class EkaFormControl extends FormControl {
+    data?: EkaFieldData;
 }
 
-export class EkaFormData {
+class EkaFormData {
     heading?: string;
-    form: FormGroup;
     primaryText: string;
     secondaryText?: string;
+    condensed?: boolean;
+}
+
+export class EkaFormGroup extends FormGroup {
+    data?: EkaFormData;
+}
+
+class EkaFormModel {
+    data: EkaFormData;
+    fields: string[];
 }
 
 const nameRegex = /^t.*/;
 const passwordRegex = /^a.*/;
 const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class FormService {
 
     constructor(
         private formBuilder: FormBuilder,
     ) { }
 
-    parseData(data: EkaFormModel): EkaFormData {
-        const { heading, primaryText, secondaryText, fields } = data;
-        const formData = fields.reduce((fData, f) => {
+    generateForm(formCode: string): EkaFormGroup {
+        const formModel = this.getDataForForm(formCode);
+        const fieldsData = formModel.fields.reduce((fData, f) => {
             const d = this.getDataForField(f);
             fData[d.selector] = this.createCustomControl(d);
             return fData;
         }, {});
 
-        return {
-            heading,
-            primaryText,
-            secondaryText,
-            form: this.formBuilder.group(formData)
-        };
+        const form: EkaFormGroup = this.formBuilder.group(fieldsData);
+        form.data = formModel.data;
+        return form;
     }
 
-    private createCustomControl(data: EkaFormField): FormControl {
-        const control: FormControl = this.formBuilder.control(data.value, data.validators);
-        (control as any).data = data;
+    private createCustomControl(data: EkaFieldData): EkaFormControl {
+        const control: EkaFormControl = this.formBuilder.control(data.value, data.validators);
+        control.data = data;
         return control;
     }
 
-    private getDataForField(fieldCode: string): EkaFormField {
+    private getDataForForm(formCode: string): EkaFormModel {
+        const dataMap = {
+            login: {
+                data: {
+                    heading: 'Login',
+                    primaryText: 'Login'
+                },
+                fields: ['username', 'password']
+            },
+            register: {
+                data: {
+                    heading: 'Register',
+                    primaryText: 'Register'
+                },
+                fields: ['reg_username', 'reg_email', 'reg_password1', 'reg_password2']
+            },
+            room_search: {
+                data: {
+                    primaryText: 'Search',
+                    condensed: true
+                },
+                fields: ['room_filter_name', 'room_filter_game', 'room_filter_owner']
+            }
+        };
+
+        const data = dataMap[formCode];
+        if (data) {
+            return data;
+        }
+        throw new Error(`Formcode ${formCode} not found`);
+    }
+
+    private getDataForField(fieldCode: string): EkaFieldData {
         const dataMap = {
             username: {
                 selector: 'username',

@@ -2,24 +2,19 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '@app/material.module';
-import { CondensedFormComponent } from './condensedForm';
-import { DynamicInputDirective } from './dynamic-input.directive';
 import { FormComponent } from './form';
-import { InputComponent } from './input';
-import { GenericInputComponent } from './input/generic-input.component';
-import { FormService } from './_services/form.service';
+import { GenericInputComponent } from './generic-input.component';
+import { InputTextComponent } from './input-text';
 
 
 @NgModule({
     declarations: [
         FormComponent,
-        CondensedFormComponent,
-        InputComponent,
+        InputTextComponent,
         GenericInputComponent,
-        DynamicInputDirective
     ],
     entryComponents: [
-        InputComponent,
+        InputTextComponent,
     ],
     imports: [
         CommonModule,
@@ -28,10 +23,6 @@ import { FormService } from './_services/form.service';
     ],
     exports: [
         FormComponent,
-        CondensedFormComponent,
-    ],
-    providers: [
-        FormService
     ]
 })
 export class EkaFormsModule { }

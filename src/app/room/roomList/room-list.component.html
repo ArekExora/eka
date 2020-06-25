@@ -48,8 +48,8 @@
                 <mat-header-cell *matHeaderCellDef class="expandable-cell"
                     [@expand]="isFiltering ? 'expanded' : 'collapsed'"
                 >
-                    <eka-condensed-form [model]="searchData" [submitOn]="['keyup']" (primaryAction)="filter($event)"
-                    ></eka-condensed-form>
+                    <eka-form [form]="searchForm" [submitOn]="['keyup']" (primaryAction)="filter($event)"
+                    ></eka-form>
                 </mat-header-cell>
             </ng-container>
             <ng-container matColumnDef="addRoom">
@@ -61,8 +61,12 @@
             </ng-container>
             
             <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="borderless-row"></mat-header-row>
-            <mat-header-row *matHeaderRowDef="['filter']; sticky: true" class="borderless-row expandable-row"></mat-header-row>
-            <mat-header-row *matHeaderRowDef="['addRoom']; sticky: true" class="expandable-row"></mat-header-row>
+            <mat-header-row *matHeaderRowDef="['filter']; sticky: true"
+                [ngClass]="{ 'borderless-row': !isFiltering }" class="borderless-row expandable-row"
+            ></mat-header-row>
+            <mat-header-row *matHeaderRowDef="['addRoom']; sticky: true"
+                [ngClass]="{ 'borderless-row': isFiltering }" class="expandable-row"
+            ></mat-header-row>
             <mat-row matRipple *matRowDef="let room; columns: displayedColumns;"
                 (click)="selectRoom(room)" class="borderless-row"
             ></mat-row>

@@ -1,11 +1,11 @@
-﻿<mat-form-field [formGroup]="form" *ngIf="selector" appearance="outline">
+﻿<mat-form-field [formGroup]="form" *ngIf="control" appearance="outline">
     <mat-label *ngIf="data.label">{{ data.label }}</mat-label>
     <input matInput [type]="show ? 'text' : data.type" [required]="required" [formControlName]="data.selector" />
     <button type="button" tabindex="-1" *ngIf="data.type === 'password'" mat-icon-button matSuffix (click)="show = !show"
-        [attr.aria-label]="'Show password'" [attr.aria-pressed]="show"
+        aria-label="Show password" [attr.aria-pressed]="show"
     >
         <mat-icon>{{ show ? 'visibility' : 'visibility_off' }}</mat-icon>
     </button>
     <mat-hint align="start" *ngIf="data.hint">{{ data.hint }}</mat-hint>
-    <mat-error *ngFor="let error of errors">{{ error }}</mat-error>    
+    <mat-error *ngFor="let error of errors">{{ error }}</mat-error>
 </mat-form-field>

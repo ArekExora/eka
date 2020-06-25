@@ -1,19 +1,35 @@
-﻿<mat-card class="form-card">
-    <form [formGroup]="data.form" (ngSubmit)="onSubmit()">
-        <mat-card-title *ngIf="data.heading">{{ data.heading }}</mat-card-title>
+﻿<form [formGroup]="form" [ngClass]="{'condensed': condensed}" (ngSubmit)="primaryClick()">
+    <mat-card *ngIf="!condensed; else formCondensed" class="default-holder">
+        <mat-card-title *ngIf="form.data.heading">{{ form.data.heading }}</mat-card-title>
         <mat-card-content>
-            <ng-template *ngFor="let field of fields" [ekaDynamicInput] [form]="data.form" [selector]="field"></ng-template>
+            <ng-container *ngTemplateOutlet="formFields"></ng-container>
         </mat-card-content>
         <mat-card-actions>
-            <button type="submit" [disabled]="disabled" mat-raised-button color="primary">
-                {{ data.primaryText }}
-            </button>
-            <button type="button" *ngIf="data.secondaryText" mat-raised-button>
-                {{ data.secondaryText }}
-            </button>
+            <ng-container *ngTemplateOutlet="formActions"></ng-container>
         </mat-card-actions>
         <mat-card-footer>
             <ng-content></ng-content>
         </mat-card-footer>
-    </form>
-</mat-card>
+    </mat-card>
+</form>
+
+<ng-template #formCondensed>
+    <div class="condensed-holder">
+        <ng-container *ngTemplateOutlet="formFields"></ng-container>
+        <span class="spacer"></span>
+        <ng-container *ngTemplateOutlet="formActions"></ng-container>
+    </div>
+</ng-template>
+
+<ng-template #formFields>
+    <eka-gen-input *ngFor="let field of fields" [form]="form" [selector]="field" (keyup)="onKeyUp()"></eka-gen-input>
+</ng-template>
+
+<ng-template #formActions>
+    <button type="button" *ngIf="form.data.secondaryText" (click)="secondaryClick()" mat-raised-button>
+        {{ form.data.secondaryText }}
+    </button>
+    <button type="submit" [disabled]="disabled" mat-raised-button color="primary">
+        {{ form.data.primaryText }}
+    </button>
+</ng-template>

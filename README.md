@@ -1,7 +1,7 @@
 # To do list
 - **ADD TESTS**
 - Clean up form layout
-- Clean up form service (allow access to form)
+- Clean up form service (allow access to form) -> Properly manage errors on login/register
 - Allow search form clearance in room list
 - When expanding a row in room list make sure it is visible (when expanding below the bottom limit, scroll down)
 - Create room form in room list

@@ -1,4 +1,4 @@
-﻿<eka-form [model]="formData" [loading]="loading" [errors]="errors" (submitted)="onSubmit($event)">
+﻿<eka-form [form]="form" [loading]="loading" (primaryAction)="onSubmit($event)">
     <div class="sub-text" [ngSwitch]="action">
         <div *ngSwitchCase="'login'">
             New around here?

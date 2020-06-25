@@ -1,5 +1,5 @@
-﻿import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { EkaFormData, EkaFormModel, FormService } from '../_services';
+﻿import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { EkaFormGroup } from '@app/_services';
 
 
 @Component({
@@ -7,35 +7,36 @@ import { EkaFormData, EkaFormModel, FormService } from '../_services';
     templateUrl: 'form.component.html',
     styleUrls: ['form.component.scss']
 })
-export class FormComponent implements OnInit, OnChanges {
-    @Input() model: EkaFormModel;
-    @Input() errors = [];
-    @Input() loading = false;
-    @Output() submitted = new EventEmitter();
-    data: EkaFormData;
+export class FormComponent implements OnInit {
+    @Input() form: EkaFormGroup;
+    @Input() submitOn: string[] = [];
+    @Input() loading = false; // TODO: Use it properly.
+    @Output() primaryAction = new EventEmitter();
+    @Output() secondaryAction = new EventEmitter();
     fields: string[] = [];
-
-    constructor(
-        private formService: FormService,
-    ) { }
+    condensed = false;
 
     ngOnInit() {
-        this.data = this.formService.parseData(this.model);
-        this.fields = Object.keys(this.data.form.controls);
+        this.fields = Object.keys(this.form.controls);
+        this.condensed = !!this.form.data.condensed;
     }
 
-    ngOnChanges({ errors }: SimpleChanges) {
-        (errors && errors.currentValue || []).forEach(error => {
-            this.data.form.get(error.field).setErrors({ [error.type]: true });
-        });
+    primaryClick() {
+        this.primaryAction.emit(this.form.getRawValue());
     }
 
-    onSubmit() {
-        this.submitted.emit(this.data.form.getRawValue());
+    secondaryClick() {
+        this.secondaryAction.emit(this.form.getRawValue());
+    }
+
+    onKeyUp() {
+        if (this.submitOn.includes('keyup')) {
+            this.primaryAction.emit(this.form.getRawValue());
+        }
     }
 
     get disabled() {
-        return this.data.form.invalid;
+        return this.form.invalid;
     }
 
 }
